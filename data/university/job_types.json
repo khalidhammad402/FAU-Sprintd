@@ -1,0 +1,133 @@
+{
+ "_readme": [
+  "University job mix for one DH-Pro rack (30 x 1 kW). Every task uses one full 1 kW server.",
+  "Volumes are ASSUMPTIONS sized for ~60 % utilisation (the corrected pitch base case)."
+ ],
+ "hardware": {
+  "gpu": "1 kW GPU server (one task = one server)",
+  "kw_per_gpu": 1.0,
+  "source": "Case brief: reference rack server 1 kW"
+ },
+ "arrival_profile": {
+  "hour_share": [
+   0.0371,
+   0.0375,
+   0.0531,
+   0.0529,
+   0.042,
+   0.0418,
+   0.0418,
+   0.0455,
+   0.0445,
+   0.0485,
+   0.0446,
+   0.0393,
+   0.038,
+   0.0337,
+   0.029,
+   0.0277,
+   0.0685,
+   0.0433,
+   0.0368,
+   0.028,
+   0.0369,
+   0.036,
+   0.0457,
+   0.0479
+  ],
+  "source": "Alibaba cluster-trace-gpu-v2020, pai_task_table: share of 732,691 completed GPU tasks started in each hour of the day (68 days, July-Aug 2020). The trace keeps time of day but shifts timestamps by a constant, so the hours are in the trace's own time zone (likely UTC+8). The profile is fairly flat: 2.8 % to 6.9 % per hour."
+ },
+ "job_types": [
+  {
+   "type": "labs",
+   "name": "Student AI labs / JupyterHub session block",
+   "customer": "university",
+   "priority": "critical",
+   "jobs_per_day": 60,
+   "deadline_h": 2.5,
+   "hours": [
+    9,
+    16
+   ],
+   "weekdays_only": true,
+   "months": [
+    2,
+    3,
+    4,
+    5,
+    9,
+    10,
+    11,
+    12
+   ],
+   "tasks": [
+    {
+     "name": "lab session",
+     "count": 1,
+     "runtime_min": 120,
+     "power_kw": 1.0,
+     "interruptible": false
+    }
+   ],
+   "source": "Interactive: must run when students work (weekdays 09:00-18:00, semester Feb-May and Sep-Dec, ASSUMPTION based on the Uni Basel semester calendar). Not interruptible. Volume: ASSUMPTION."
+  },
+  {
+   "type": "rnd",
+   "name": "PhD / R&D model training",
+   "customer": "university",
+   "priority": "normal",
+   "jobs_per_day": 10,
+   "deadline_h": 24,
+   "tasks": [
+    {
+     "name": "train worker",
+     "count": 4,
+     "runtime_min": 240,
+     "power_kw": 1.0,
+     "interruptible": true
+    }
+   ],
+   "source": "Batch training with checkpoints, 24 h SLA (pitch). 4 h tasks: trace p90 212 min, long tasks hold most GPU time (Alibaba GPU trace 2020). Volume: ASSUMPTION."
+  },
+  {
+   "type": "genomics",
+   "name": "Genomics / simulation pipeline",
+   "customer": "university",
+   "priority": "flexible",
+   "jobs_per_day": 4,
+   "deadline_h": 48,
+   "tasks": [
+    {
+     "name": "pipeline step",
+     "count": 8,
+     "runtime_min": 120,
+     "power_kw": 1.0,
+     "interruptible": true
+    }
+   ],
+   "source": "Parallel batch steps, 48 h deadline. Volume: ASSUMPTION."
+  },
+  {
+   "type": "external",
+   "name": "External Swiss enterprise batch AI",
+   "customer": "external",
+   "priority": "normal",
+   "jobs_per_day": 7,
+   "deadline_h": 12,
+   "hours": [
+    18,
+    24
+   ],
+   "tasks": [
+    {
+     "name": "batch shard",
+     "count": 12,
+     "runtime_min": 120,
+     "power_kw": 1.0,
+     "interruptible": true
+    }
+   ],
+   "source": "Overflow from Swiss companies, submitted in the evening, 12 h batch SLA (pitch). Volume: ASSUMPTION."
+  }
+ ]
+}

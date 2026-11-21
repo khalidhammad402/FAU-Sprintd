@@ -1,0 +1,2 @@
+site_id,name,type,lat,lon,building_height_m,tank_kwh,owner
+UNI,University campus Basel,university,47.5585,7.5833,25,670.0,uniowner

@@ -16,7 +16,7 @@ TANK_START_FRACTION = 0.0     # tank level at the start (0 = empty)
 ALGORITHM = "greedy"          # "greedy" or "mpc"
 TARGET_FRACTION = 0.5         # greedy: aim to keep each tank this full
 URGENT_SLACK_SLOTS = 1.0      # a task with less slack than this must run now
-FILLER_ENABLED = False         # True = unlimited background work (spot market) fills heat gaps
+FILLER_ENABLED = True         # True = unlimited background work (spot market) fills heat gaps
 FILLER_TASKS = [              # ASSUMPTION: background work types used as filler
     {"name": "filler-embeddings",    "runtime_min": 30, "power_kw": 0.3},
     {"name": "filler-reranking",     "runtime_min": 15, "power_kw": 0.5},

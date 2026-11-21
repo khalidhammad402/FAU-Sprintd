@@ -1,0 +1,166 @@
+{
+ "algorithm": "mpc",
+ "run_seconds": 406,
+ "servers": 30,
+ "period_h": 8760.0,
+ "tank_kwh": 670.0,
+ "demand_kwh": 600000.0,
+ "server_heat_kwh": 123352.29357915386,
+ "backup_kwh": 476647.70642084605,
+ "dumped_kwh": 6908.906420846379,
+ "produced_kwh": 130261.20000000004,
+ "final_tank_kwh": 0.0,
+ "it_electricity_kwh": 162826.5,
+ "server_running_h": 162826.5,
+ "server_hours_sold": 162826.5,
+ "utilisation_pct": 61.958333333333336,
+ "load_factor_pct": 61.958333333333336,
+ "sold_h_by_group": {
+  "university": 101170.5,
+  "external": 61656.0
+ },
+ "sold_h_by_type": {
+  "rnd": 56592.0,
+  "genomics": 23758.5,
+  "external": 61656.0,
+  "labs": 20820.0
+ },
+ "jobs_by_type": {
+  "rnd": {
+   "jobs": 3537,
+   "done": 3537,
+   "missed": 0
+  },
+  "genomics": {
+   "jobs": 1485,
+   "done": 1484,
+   "missed": 1
+  },
+  "external": {
+   "jobs": 2569,
+   "done": 2569,
+   "missed": 0
+  },
+  "labs": {
+   "jobs": 10410,
+   "done": 10410,
+   "missed": 0
+  }
+ },
+ "jobs_total": 18001,
+ "jobs_done": 18000,
+ "jobs_missed": 1,
+ "jobs_cancelled": 0,
+ "missed_deadlines_pct": 0.005555246930726071,
+ "pauses": 4792,
+ "monthly": [
+  {
+   "month": 1,
+   "demand_kwh": 102105.07928110477,
+   "server_heat_kwh": 9361.600000000002,
+   "backup_kwh": 92743.47928110478,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 9361.600000000002,
+   "electricity_kwh": 11702.0
+  },
+  {
+   "month": 2,
+   "demand_kwh": 87269.5557563023,
+   "server_heat_kwh": 10725.600000000004,
+   "backup_kwh": 76543.9557563023,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 10725.600000000002,
+   "electricity_kwh": 13407.0
+  },
+  {
+   "month": 3,
+   "demand_kwh": 74413.58933535632,
+   "server_heat_kwh": 11128.800000000003,
+   "backup_kwh": 63284.78933535632,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 11128.800000000003,
+   "electricity_kwh": 13911.0
+  },
+  {
+   "month": 4,
+   "demand_kwh": 43595.62394254429,
+   "server_heat_kwh": 11203.704328643516,
+   "backup_kwh": 32391.91961390076,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 11322.600000000002,
+   "electricity_kwh": 14153.25
+  },
+  {
+   "month": 5,
+   "demand_kwh": 25515.339658519788,
+   "server_heat_kwh": 11212.795240638246,
+   "backup_kwh": 14302.54441788154,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 11665.800000000003,
+   "electricity_kwh": 14582.25
+  },
+  {
+   "month": 6,
+   "demand_kwh": 7826.29527407755,
+   "server_heat_kwh": 7809.634006278605,
+   "backup_kwh": 16.661267798944696,
+   "dumped_kwh": 1507.4664244397054,
+   "produced_kwh": 9415.200000000003,
+   "electricity_kwh": 11769.0
+  },
+  {
+   "month": 7,
+   "demand_kwh": 7718.640667189052,
+   "server_heat_kwh": 7718.640667189052,
+   "backup_kwh": 0.0,
+   "dumped_kwh": 2007.889750103625,
+   "produced_kwh": 9690.000000000004,
+   "electricity_kwh": 12112.5
+  },
+  {
+   "month": 8,
+   "demand_kwh": 7840.669185428447,
+   "server_heat_kwh": 7840.669185428447,
+   "backup_kwh": 0.0,
+   "dumped_kwh": 1896.1569032207203,
+   "produced_kwh": 9751.200000000003,
+   "electricity_kwh": 12189.0
+  },
+  {
+   "month": 9,
+   "demand_kwh": 19833.75174059083,
+   "server_heat_kwh": 10780.450150975985,
+   "backup_kwh": 9053.301589614843,
+   "dumped_kwh": 1497.3933430823279,
+   "produced_kwh": 11630.000000000004,
+   "electricity_kwh": 14537.5
+  },
+  {
+   "month": 10,
+   "demand_kwh": 46192.06140854349,
+   "server_heat_kwh": 12083.000000000004,
+   "backup_kwh": 34109.06140854349,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 12083.000000000004,
+   "electricity_kwh": 15103.75
+  },
+  {
+   "month": 11,
+   "demand_kwh": 80607.69702989075,
+   "server_heat_kwh": 11160.200000000004,
+   "backup_kwh": 69447.49702989076,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 11160.200000000003,
+   "electricity_kwh": 13950.25
+  },
+  {
+   "month": 12,
+   "demand_kwh": 97081.69672045237,
+   "server_heat_kwh": 12327.200000000004,
+   "backup_kwh": 84754.49672045237,
+   "dumped_kwh": 0.0,
+   "produced_kwh": 12327.200000000004,
+   "electricity_kwh": 15409.0
+  }
+ ]
+}

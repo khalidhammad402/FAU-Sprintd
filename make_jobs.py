@@ -46,9 +46,19 @@ jobs, n, energy = [], 0, {}
 for d in range(n_days):
     day0 = start.normalize() + pd.Timedelta(days=d)
     for jt in cat["job_types"]:
+        # optional calendar of a job type: active months, weekdays only, arrival-hour window [from, to)
+        if "months" in jt and day0.month not in jt["months"]:
+            continue
+        if jt.get("weekdays_only") and day0.day_of_week >= 5:
+            continue
         for _ in range(rng.poisson(jt["jobs_per_day"] * args.scale)):
-            hour = rng.choice(24, p=hours)
-            arrival = day0 + pd.Timedelta(hours=int(hour), minutes=15 * int(rng.integers(4)))
+            if "hours" in jt:
+                h0, h1 = jt["hours"]
+                quarter = int(rng.integers(int(h0 * 4), int(h1 * 4)))
+                arrival = day0 + pd.Timedelta(minutes=15 * quarter)
+            else:
+                hour = rng.choice(24, p=hours)
+                arrival = day0 + pd.Timedelta(hours=int(hour), minutes=15 * int(rng.integers(4)))
             deadline = arrival + pd.Timedelta(hours=jt["deadline_h"])
             if arrival < start or deadline > end:
                 continue                                   # must fit inside the demand period
@@ -62,8 +72,8 @@ for d in range(n_days):
                     t = {"task_id": f"{jid}-T{k}",
                          "name": spec["name"] + (f" {i + 1}" if spec.get("count", 1) > 1 else ""),
                          "runtime_min": spec["runtime_min"],
-                         "power_kw": round(spec["gpus"] * kw_per_gpu, 4),
-                         "threads": max(1, int(np.ceil(spec["gpus"]))),
+                         "power_kw": round(spec["power_kw"] if "power_kw" in spec else spec["gpus"] * kw_per_gpu, 4),
+                         "threads": max(1, int(np.ceil(spec.get("gpus", 1)))),
                          "interruptible": spec.get("interruptible", True)}
                     if spec.get("after_all") and earlier:
                         t["depends_on"] = list(earlier)
