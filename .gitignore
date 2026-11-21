@@ -32,3 +32,6 @@ results/*/tasks.csv
 results/*/events.csv
 results/*/servers_timeline.csv
 results/days/
+
+# run logs
+results/*.log

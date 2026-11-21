@@ -7,9 +7,10 @@ Results workbook with the key figures the problem statement asks for (must-have 
 Runs the year twice on the active demand file (config.DEMAND_FILE):
   A. main scenario: settings of config.py (by default only the customer jobs of data/jobs.json)
   B. comparison:    the same plus unlimited filler jobs (a model that assumes unlimited jobs must say so)
-and writes results/DigitalHeat_results.xlsx with the sheets
+and writes results/DigitalHeat_results_<algorithm>.xlsx with the sheets
   Key figures | Pay-off | Monthly | Daily | Job types | Scenarios | Assumptions | Definitions
 Scenario A's raw files are also saved to results/<algorithm>/ (as python -m sim.run does).
+Compare algorithms afterwards with: python -m sim.compare   (greedy ~2.5 min, mpc ~80 min)
 """
 import argparse
 import json
@@ -22,7 +23,8 @@ import config
 from core import assumptions
 from core.metrics import economics, fleet_summary, income_of, job_outcomes, server_hours, site_summary
 
-OUT = os.path.join(config.RESULTS_DIR, "DigitalHeat_results.xlsx")
+def out_path(algorithm):
+    return os.path.join(config.RESULTS_DIR, f"DigitalHeat_results_{algorithm}.xlsx")
 
 
 def run(algorithm, filler):
@@ -166,7 +168,8 @@ def payoff(money):
     return head, sens
 
 
-def write(main, comp, algorithm, path=OUT):
+def write(main, comp, algorithm, path=None):
+    path = path or out_path(algorithm)
     kf, money = key_figures(main)
     kf_c, money_c = key_figures(comp)
     head, sens = payoff(money)
@@ -241,7 +244,7 @@ def main():
     print(kf[cols].round(1).to_string(index=False))
     print("\n" + scen.round(2).to_string())
     print("\n" + fs["pay_off_statement"])
-    print(f"\nwrote {OUT}")
+    print(f"\nwrote {out_path(a.algorithm)}")
 
 
 if __name__ == "__main__":
