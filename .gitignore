@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+~$*
+
+# runtime output
+logs/
+*.progress
+*.tmp
+
+# raw open-data downloads (large, re-downloadable: see data/sources/README.md)
+data/sources/*
+!data/sources/README.md
+
+# local backups of earlier inputs
+data/backup_*/
+
+# measurements are per laptop: run python -m live.measure
+data/measurements/
+
+# large simulation outputs (regenerate with: python -m sim.run --algorithm greedy)
+results/*/tasks.csv
+results/*/events.csv
+results/*/servers_timeline.csv
+results/days/

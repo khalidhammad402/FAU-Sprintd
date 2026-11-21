@@ -1,0 +1,12 @@
+pandas
+numpy
+openpyxl
+pulp
+highspy
+fastapi
+uvicorn
+python-multipart
+paho-mqtt
+psutil
+pytest
+httpx

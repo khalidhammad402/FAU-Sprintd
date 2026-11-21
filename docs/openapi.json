@@ -1,0 +1,3745 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "DigitalHeat API",
+  "description": "Backend of the DigitalHeat platform: servers in building basements run AI jobs and their heat warms the building through a tank. WebSocket: `/api/v1/ws?token=<token>` (see docs/BACKEND_HANDOFF.md).",
+  "version": "1.1"
+ },
+ "paths": {
+  "/api/v1/health": {
+   "get": {
+    "tags": [
+     "meta"
+    ],
+    "summary": "Liveness check",
+    "operationId": "health_api_v1_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/meta": {
+   "get": {
+    "tags": [
+     "meta"
+    ],
+    "summary": "Everything a client needs to configure itself",
+    "operationId": "meta_api_v1_meta_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/login": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Log in (demo users: see config.USERS)",
+    "operationId": "login_api_v1_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/me": {
+   "get": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "The logged-in user",
+    "operationId": "me_api_v1_auth_me_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/map/sites": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "GeoJSON of all sites with live state",
+    "operationId": "map_sites_api_v1_admin_map_sites_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/kpis": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "Key figures (case-brief definitions)",
+    "description": "scope=fleet (default) or scope=site&siteId=H1; optional from/to (ISO) limit the period.",
+    "operationId": "admin_kpis_api_v1_admin_kpis_get",
+    "parameters": [
+     {
+      "name": "scope",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(fleet|site)$",
+       "default": "fleet",
+       "title": "Scope"
+      }
+     },
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "From"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "To"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/sites": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "All sites with live summary",
+    "operationId": "admin_sites_api_v1_admin_sites_get",
+    "parameters": [
+     {
+      "name": "type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Type"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Status"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/sites/{site_id}": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "One site + live state + today's KPIs",
+    "operationId": "admin_site_api_v1_admin_sites__site_id__get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/sites/{site_id}/timeline": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "Slot readings of a site (live run so far)",
+    "description": "resolution=15m|1h|1d|1mo: kWh fields summed, tank = last value, power = mean.",
+    "operationId": "admin_site_timeline_api_v1_admin_sites__site_id__timeline_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "From"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "To"
+      }
+     },
+     {
+      "name": "resolution",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(15m|1h|1d|1mo)$",
+       "default": "15m",
+       "title": "Resolution"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/sites/{site_id}/servers": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "Servers of a site + current tasks",
+    "operationId": "admin_site_servers_api_v1_admin_sites__site_id__servers_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/servers": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "All servers (for map rings / rack views)",
+    "operationId": "admin_servers_api_v1_admin_servers_get",
+    "parameters": [
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/servers/{server_id}": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "One server + current tasks",
+    "operationId": "admin_server_api_v1_admin_servers__server_id__get",
+    "parameters": [
+     {
+      "name": "server_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Server Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/servers/{server_id}/timeline": {
+   "get": {
+    "tags": [
+     "operator: fleet"
+    ],
+    "summary": "Load / capacity over time",
+    "operationId": "admin_server_timeline_api_v1_admin_servers__server_id__timeline_get",
+    "parameters": [
+     {
+      "name": "server_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Server Id"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "From"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "To"
+      }
+     },
+     {
+      "name": "resolution",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(15m|1h|1d|1mo)$",
+       "default": "15m",
+       "title": "Resolution"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/jobs": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "Jobs (paginated)",
+    "operationId": "admin_jobs_api_v1_admin_jobs_get",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(queued|running|done|missed|cancelled)$",
+       "title": "Status"
+      }
+     },
+     {
+      "name": "customerId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Customerid"
+      }
+     },
+     {
+      "name": "priority",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Priority"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/jobs/{job_id}": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "One job with its tasks",
+    "operationId": "admin_job_api_v1_admin_jobs__job_id__get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/tasks": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "Tasks (paginated, filterable)",
+    "operationId": "admin_tasks_api_v1_admin_tasks_get",
+    "parameters": [
+     {
+      "name": "state",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(waiting|ready|running|paused|done|missed|cancelled)$",
+       "title": "State"
+      }
+     },
+     {
+      "name": "jobId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Jobid"
+      }
+     },
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "serverId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Serverid"
+      }
+     },
+     {
+      "name": "includeFiller",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Includefiller"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/tasks/{task_id}": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "One task + lifecycle events",
+    "operationId": "admin_task_api_v1_admin_tasks__task_id__get",
+    "parameters": [
+     {
+      "name": "task_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Task Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/tasks/{task_id}/{action}": {
+   "post": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "Manual pause / resume / cancel",
+    "description": "pause = hold (not scheduled from the next slot), resume = release the hold, cancel = stop now.",
+    "operationId": "admin_task_action_api_v1_admin_tasks__task_id___action__post",
+    "parameters": [
+     {
+      "name": "task_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Task Id"
+      }
+     },
+     {
+      "name": "action",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Action"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/task-types": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "Job-type catalogue (data/job_types.json) with sources",
+    "operationId": "task_types_api_v1_admin_task_types_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/customers": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "Customers with job counts and revenue",
+    "operationId": "admin_customers_api_v1_admin_customers_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/customers/{customer_id}": {
+   "get": {
+    "tags": [
+     "operator: jobs & tasks"
+    ],
+    "summary": "One customer + jobs",
+    "operationId": "admin_customer_api_v1_admin_customers__customer_id__get",
+    "parameters": [
+     {
+      "name": "customer_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Customer Id"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/scheduler": {
+   "get": {
+    "tags": [
+     "operator: live control"
+    ],
+    "summary": "Demo clock and scheduler state",
+    "operationId": "get_scheduler_api_v1_admin_scheduler_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "operator: live control"
+    ],
+    "summary": "Change algorithm, clock speed (slotSeconds) or pause / resume the clock",
+    "operationId": "put_scheduler_api_v1_admin_scheduler_put",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SchedulerUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/scheduler/jump": {
+   "post": {
+    "tags": [
+     "operator: live control"
+    ],
+    "summary": "Fast-forward the live run to a date (forward only, runs in the background)",
+    "description": "Poll GET /admin/scheduler: mode is 'jumping' until done. Jumping a whole year takes ~1-2 min.",
+    "operationId": "jump_api_v1_admin_scheduler_jump_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/JumpRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/scheduler/reset": {
+   "post": {
+    "tags": [
+     "operator: live control"
+    ],
+    "summary": "Restart the live run from the first slot (reloads the input files)",
+    "operationId": "reset_api_v1_admin_scheduler_reset_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/live/agents": {
+   "get": {
+    "tags": [
+     "operator: live control"
+    ],
+    "summary": "Real laptops (agents): host, CPU, real processes and their progress",
+    "operationId": "live_agents_api_v1_admin_live_agents_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/results": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Yearly balance per site and fleet from the last offline run (must-have 3)",
+    "operationId": "results_api_v1_admin_results_get",
+    "parameters": [
+     {
+      "name": "algorithm",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(greedy|mpc)$",
+       "default": "greedy",
+       "title": "Algorithm"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/results/timeline": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Year timeline of the last offline run for one site (for yearly charts)",
+    "operationId": "results_timeline_api_v1_admin_results_timeline_get",
+    "parameters": [
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "resolution",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(15m|1h|1d|1mo)$",
+       "default": "1d",
+       "title": "Resolution"
+      }
+     },
+     {
+      "name": "algorithm",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(greedy|mpc)$",
+       "default": "greedy",
+       "title": "Algorithm"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/assumptions": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Every assumption with value, source and status (BRIEF / SOURCE / ASSUMPTION / MOCK / LIMIT)",
+    "operationId": "get_assumptions_api_v1_admin_assumptions_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/datasets": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Demand files in data/",
+    "operationId": "datasets_api_v1_admin_datasets_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Upload a demand file (Excel / CSV)",
+    "operationId": "upload_dataset_api_v1_admin_datasets_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_upload_dataset_api_v1_admin_datasets_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/simulations": {
+   "post": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Start an offline year simulation (async)",
+    "operationId": "start_simulation_api_v1_admin_simulations_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SimulationRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Simulation runs",
+    "operationId": "list_simulations_api_v1_admin_simulations_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/simulations/compare": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Compare runs per site",
+    "operationId": "compare_simulations_api_v1_admin_simulations_compare_get",
+    "parameters": [
+     {
+      "name": "runIds",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Runids"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/simulations/{run_id}": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "One run: status + summary",
+    "operationId": "get_simulation_api_v1_admin_simulations__run_id__get",
+    "parameters": [
+     {
+      "name": "run_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Run Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/simulations/{run_id}/timeline": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Timeline of a run",
+    "operationId": "simulation_timeline_api_v1_admin_simulations__run_id__timeline_get",
+    "parameters": [
+     {
+      "name": "run_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Run Id"
+      }
+     },
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "resolution",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(15m|1h|1d|1mo)$",
+       "default": "1h",
+       "title": "Resolution"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/simulations/{run_id}/schedule": {
+   "get": {
+    "tags": [
+     "operator: results"
+    ],
+    "summary": "Tasks of a run",
+    "operationId": "simulation_schedule_api_v1_admin_simulations__run_id__schedule_get",
+    "parameters": [
+     {
+      "name": "run_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Run Id"
+      }
+     },
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/events": {
+   "get": {
+    "tags": [
+     "operator: events & settings"
+    ],
+    "summary": "Alerts (newest first, paginated)",
+    "operationId": "admin_events_api_v1_admin_events_get",
+    "parameters": [
+     {
+      "name": "severity",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(info|warning|critical)$",
+       "title": "Severity"
+      }
+     },
+     {
+      "name": "siteId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Siteid"
+      }
+     },
+     {
+      "name": "acknowledged",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "title": "Acknowledged"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/events/{event_id}": {
+   "patch": {
+    "tags": [
+     "operator: events & settings"
+    ],
+    "summary": "Acknowledge an alert",
+    "operationId": "ack_event_api_v1_admin_events__event_id__patch",
+    "parameters": [
+     {
+      "name": "event_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Event Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AckRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/admin/settings/pricing": {
+   "get": {
+    "tags": [
+     "operator: events & settings"
+    ],
+    "summary": "Prices used for the money KPIs",
+    "operationId": "get_pricing_api_v1_admin_settings_pricing_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "operator: events & settings"
+    ],
+    "summary": "Change prices (until restart)",
+    "operationId": "put_pricing_api_v1_admin_settings_pricing_put",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PricingUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/overview": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "My jobs at a glance",
+    "operationId": "customer_overview_api_v1_customer_overview_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/jobs": {
+   "post": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Submit a job (one or more tasks)",
+    "description": "Arrives now (simulated time). Task ids are local to the request and made unique.",
+    "operationId": "submit_job_api_v1_customer_jobs_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/JobSubmit"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "My jobs (paginated)",
+    "operationId": "customer_jobs_api_v1_customer_jobs_get",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(queued|running|done|missed|cancelled)$",
+       "title": "Status"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/jobs/{job_id}": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "One of my jobs with its tasks",
+    "operationId": "customer_job_api_v1_customer_jobs__job_id__get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/jobs/{job_id}/tasks": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Tasks of my job + lifecycle events",
+    "operationId": "customer_job_tasks_api_v1_customer_jobs__job_id__tasks_get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/jobs/{job_id}/cancel": {
+   "post": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Cancel my job",
+    "operationId": "customer_cancel_api_v1_customer_jobs__job_id__cancel_post",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/jobs/{job_id}/results": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Result summary of my job",
+    "operationId": "customer_results_api_v1_customer_jobs__job_id__results_get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/usage": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Server-hours and cost per month and priority",
+    "operationId": "customer_usage_api_v1_customer_usage_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/invoices": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Monthly invoices",
+    "operationId": "customer_invoices_api_v1_customer_invoices_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/impact": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Heat my compute delivered to buildings",
+    "operationId": "customer_impact_api_v1_customer_impact_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/api-keys": {
+   "get": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "My API keys (demo)",
+    "operationId": "list_keys_api_v1_customer_api_keys_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Create an API key (demo)",
+    "operationId": "create_key_api_v1_customer_api_keys_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/customer/api-keys/{key_id}": {
+   "delete": {
+    "tags": [
+     "customer"
+    ],
+    "summary": "Delete an API key",
+    "operationId": "delete_key_api_v1_customer_api_keys__key_id__delete",
+    "parameters": [
+     {
+      "name": "key_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Key Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/sites": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "My sites",
+    "operationId": "owner_sites_api_v1_site_sites_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/sites/{site_id}/overview": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "Today at a glance",
+    "operationId": "owner_overview_api_v1_site_sites__site_id__overview_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/sites/{site_id}/energy": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "Heat by day / week / month / year",
+    "operationId": "owner_energy_api_v1_site_sites__site_id__energy_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "period",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(day|week|month|year)$",
+       "default": "day",
+       "title": "Period"
+      }
+     },
+     {
+      "name": "date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "Date"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/sites/{site_id}/savings": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "Value of the server heat per month",
+    "operationId": "owner_savings_api_v1_site_sites__site_id__savings_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "From"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "To"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/sites/{site_id}/servers": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "Servers in my building (plain words)",
+    "operationId": "owner_servers_api_v1_site_sites__site_id__servers_get",
+    "parameters": [
+     {
+      "name": "site_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Site Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/notifications": {
+   "get": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "My notifications",
+    "operationId": "owner_notifications_api_v1_site_notifications_get",
+    "parameters": [
+     {
+      "name": "unread",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "title": "Unread"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/site/notifications/{nid}": {
+   "patch": {
+    "tags": [
+     "site owner"
+    ],
+    "summary": "Mark a notification read / unread",
+    "operationId": "owner_read_api_v1_site_notifications__nid__patch",
+    "parameters": [
+     {
+      "name": "nid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Nid"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "description": "Bearer <token> from POST /auth/login",
+       "title": "Authorization"
+      },
+      "description": "Bearer <token> from POST /auth/login"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ReadRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AckRequest": {
+    "properties": {
+     "acknowledged": {
+      "type": "boolean",
+      "title": "Acknowledged",
+      "default": true
+     }
+    },
+    "type": "object",
+    "title": "AckRequest"
+   },
+   "Body_upload_dataset_api_v1_admin_datasets_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_upload_dataset_api_v1_admin_datasets_post"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "JobSubmit": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name",
+      "examples": [
+       "Embed archive"
+      ]
+     },
+     "priority": {
+      "type": "string",
+      "enum": [
+       "critical",
+       "normal",
+       "flexible"
+      ],
+      "title": "Priority",
+      "default": "normal"
+     },
+     "deadline": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Deadline",
+      "description": "ISO 8601; give this or deadlineInMin"
+     },
+     "deadlineInMin": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Deadlineinmin",
+      "description": "Deadline in minutes of simulated time from now",
+      "examples": [
+       600
+      ]
+     },
+     "tasks": {
+      "items": {
+       "$ref": "#/components/schemas/TaskSpec"
+      },
+      "type": "array",
+      "minItems": 1,
+      "title": "Tasks"
+     }
+    },
+    "type": "object",
+    "required": [
+     "tasks"
+    ],
+    "title": "JobSubmit"
+   },
+   "JumpRequest": {
+    "properties": {
+     "to": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "To",
+      "description": "Fast-forward to this time (forward only)",
+      "examples": [
+       "2021-01-19T00:00:00"
+      ]
+     },
+     "slot": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Slot",
+      "description": "... or to this slot number"
+     }
+    },
+    "type": "object",
+    "title": "JumpRequest"
+   },
+   "LoginRequest": {
+    "properties": {
+     "username": {
+      "type": "string",
+      "title": "Username",
+      "examples": [
+       "admin"
+      ]
+     },
+     "password": {
+      "type": "string",
+      "title": "Password",
+      "examples": [
+       "demo"
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "username",
+     "password"
+    ],
+    "title": "LoginRequest"
+   },
+   "PricingUpdate": {
+    "properties": {
+     "electricityChfPerKwh": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Electricitychfperkwh"
+     },
+     "heatPumpCop": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Heatpumpcop"
+     },
+     "computeChfPerServerHour": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Computechfperserverhour",
+      "description": "Per priority: {critical, normal, flexible}"
+     }
+    },
+    "type": "object",
+    "title": "PricingUpdate"
+   },
+   "ReadRequest": {
+    "properties": {
+     "read": {
+      "type": "boolean",
+      "title": "Read",
+      "default": true
+     }
+    },
+    "type": "object",
+    "title": "ReadRequest"
+   },
+   "SchedulerUpdate": {
+    "properties": {
+     "algorithm": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "greedy",
+         "mpc"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Algorithm"
+     },
+     "slotSeconds": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 3600.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Slotseconds",
+      "description": "Real seconds per 15-min slot of the demo clock"
+     },
+     "paused": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Paused",
+      "description": "True = stop the clock, False = let it run"
+     }
+    },
+    "type": "object",
+    "title": "SchedulerUpdate"
+   },
+   "SimulationRequest": {
+    "properties": {
+     "algorithm": {
+      "type": "string",
+      "enum": [
+       "greedy",
+       "mpc"
+      ],
+      "title": "Algorithm",
+      "default": "greedy"
+     },
+     "datasetId": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Datasetid",
+      "description": "File name from GET /admin/datasets; default = active file"
+     }
+    },
+    "type": "object",
+    "title": "SimulationRequest"
+   },
+   "TaskSpec": {
+    "properties": {
+     "taskId": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Taskid",
+      "description": "Your own id inside this job (e.g. 'T1'); made unique by the API",
+      "examples": [
+       "A"
+      ]
+     },
+     "name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name",
+      "examples": [
+       "embed batch 1"
+      ]
+     },
+     "runtimeMin": {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+      "title": "Runtimemin",
+      "description": "Runtime on one server, minutes",
+      "examples": [
+       30
+      ]
+     },
+     "powerKw": {
+      "type": "number",
+      "exclusiveMinimum": 0.0,
+      "title": "Powerkw",
+      "description": "Power while running (all threads), kW",
+      "examples": [
+       0.3
+      ]
+     },
+     "threads": {
+      "type": "integer",
+      "minimum": 1.0,
+      "title": "Threads",
+      "default": 1
+     },
+     "interruptible": {
+      "type": "boolean",
+      "title": "Interruptible",
+      "description": "False = once started it cannot be paused or moved",
+      "default": true
+     },
+     "dependsOn": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Dependson",
+      "description": "taskIds of this job that must finish first"
+     }
+    },
+    "type": "object",
+    "required": [
+     "runtimeMin",
+     "powerKw"
+    ],
+    "title": "TaskSpec"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ },
+ "tags": [
+  {
+   "name": "meta",
+   "description": "Health, metadata and conventions (no login needed)."
+  },
+  {
+   "name": "auth",
+   "description": "Demo login: the token is the username. Send `Authorization: Bearer <token>`."
+  },
+  {
+   "name": "operator: fleet",
+   "description": "Map, KPIs, sites and servers (role admin)."
+  },
+  {
+   "name": "operator: jobs & tasks",
+   "description": "Jobs, tasks, task types, customers (role admin)."
+  },
+  {
+   "name": "operator: live control",
+   "description": "Demo clock, real laptops (agents), jump / reset (role admin)."
+  },
+  {
+   "name": "operator: results",
+   "description": "Yearly balance of the offline simulation, assumptions, simulation runs and datasets (role admin)."
+  },
+  {
+   "name": "operator: events & settings",
+   "description": "Alerts and prices (role admin)."
+  },
+  {
+   "name": "customer",
+   "description": "Compute customers: submit and follow jobs (role customer)."
+  },
+  {
+   "name": "site owner",
+   "description": "Client portal for homeowners / building operators (role site_owner)."
+  }
+ ]
+}

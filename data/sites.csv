@@ -1,0 +1,6 @@
+site_id,name,type,lat,lon,building_height_m,tank_kwh,owner
+H1,Household H1,household,47.555,7.575,9,35.0,h1owner
+H2,Household H2,household,47.561,7.587,9,35.0,h2owner
+FARM1,Farm FARM1,farm,47.567,7.599,18,35.0,farm1owner
+HOTEL1,Hotel HOTEL1,hotel,47.555,7.611,18,35.0,hotel1owner
+HOTEL2,Hotel HOTEL2,hotel,47.561,7.623,18,35.0,hotel2owner
