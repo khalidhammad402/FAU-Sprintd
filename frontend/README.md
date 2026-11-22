@@ -27,6 +27,9 @@ On the local network, other devices open `http://<this-laptop-ip>:5173`. The fro
 WebSocket to the backend on this laptop (`DH_BACKEND`, default `http://127.0.0.1:8000`), so nothing has to be configured
 on the other devices. Mock mode works only on this laptop (the mock service worker needs `localhost` or HTTPS).
 
+`pnpm portal` starts the portal on port 8080 (`../portal/`): one page with the pitch deck, this dashboard and the walkthrough
+video, plus a QR code of its network address. The last slide of the deck shows the same code.
+
 Backend (from the repo root): `DH_MQTT=0 .venv/Scripts/python -m uvicorn api.server:app --port 8000`, with `websockets` installed (see `docs/FRONTEND_GAPS.md` #3).
 
 Configuration (`.env`, see `.env.example`): `VITE_API_BASE`, `VITE_WS_BASE`, `VITE_DEMO_MODE=live|mock`. On a demo laptop press **Shift + D** to change the API address, switch to mock data, reduce motion or see connection diagnostics without rebuilding.

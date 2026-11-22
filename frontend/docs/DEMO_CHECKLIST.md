@@ -14,6 +14,7 @@ Run this end to end before going on stage. Commands are for Windows (Git Bash or
   (PowerShell: `$env:DH_MQTT="0"; .venv\Scripts\python -m uvicorn api.server:app --host 0.0.0.0 --port 8000`)
 - [ ] Frontend: `cd frontend`, `pnpm lan` (live, served to the local network) or `pnpm dev:mock` (no backend, this laptop only). Open `http://localhost:5173`.
 - [ ] Other laptops and phones on the same network: open `http://<this-laptop-ip>:5173` (find the IP with `ipconfig`). No settings needed: the frontend forwards `/api` to the backend. University Wi-Fi (eduroam) usually blocks device-to-device traffic: use a phone hotspot.
+- [ ] Portal (deck + dashboard + video on one page, with a QR code): `cd frontend`, `pnpm portal`, then open `http://localhost:8080`. Present the deck from `http://localhost:8080/deck/`; its last slide (15) shows the QR code for the audience. Scan it once with a phone before going on stage.
 - [ ] Shift + D shows connection diagnostics: REST latency, WebSocket state, last message age.
 
 ## 2. Three windows, one per role

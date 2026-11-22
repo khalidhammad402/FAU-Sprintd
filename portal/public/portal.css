@@ -1,0 +1,100 @@
+/* DigitalHeat portal. Same palette, type and motion as the pitch deck: charcoal, bronze for structure, amber for heat. */
+@font-face { font-family: 'Inter'; font-weight: 100 900; font-display: swap; src: url('fonts/inter-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter Tight'; font-weight: 100 900; font-display: swap; src: url('fonts/inter-tight-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 100 800; font-display: swap; src: url('fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); }
+
+:root {
+  --bg: #0b0c0b; --ink: #f8f4ea; --mut: #b9b3a6; --dim: #807a70;
+  --bronze: #935a30; --copper: #e2a06a; --amber: #ffb35d; --cyan: #7fd6d8; --red: #d9796f;
+  --line: rgba(248, 244, 234, .14);
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --disp: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body {
+  margin: 0; min-height: 100vh;
+  background:
+    radial-gradient(70% 60% at 88% 70%, rgba(147, 90, 48, .16), transparent 70%),
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(5, 6, 5, .7) 100%);
+}
+.mono { font-family: var(--mono); }
+a { color: inherit; text-decoration: none; }
+
+.page { display: flex; flex-direction: column; min-height: 100vh; max-width: 1360px; margin: 0 auto; padding: clamp(20px, 4vw, 56px) clamp(20px, 6vw, 88px) 28px; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.wordmark { font: 600 24px/1 var(--disp); letter-spacing: -.02em; }
+.wordmark b { font-weight: inherit; color: var(--amber); }
+.net { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); white-space: nowrap; }
+.net i { display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: var(--cyan); vertical-align: 1px; }
+
+.grid { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(40px, 6vw, 96px); align-items: center; padding: clamp(32px, 6vh, 72px) 0; }
+
+.kicker { margin: 0 0 18px; font: 500 13px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--copper); }
+.title { margin: 0; font: 600 clamp(40px, 6.2vw, 84px)/1 var(--disp); letter-spacing: -.028em; }
+.title em { font-style: normal; color: var(--copper); }
+.lead { margin: 24px 0 0; max-width: 560px; text-wrap: pretty; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; color: rgba(248, 244, 234, .82); }
+
+/* the three destinations, numbered like the deck's "How we win" list */
+.links { list-style: none; margin: clamp(28px, 5vh, 52px) 0 0; padding: 0; max-width: 720px; }
+.links li { border-top: 1px solid var(--line); }
+.links li:last-child { border-bottom: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 52px minmax(0, 1fr) 32px; align-items: center; gap: 8px; padding: 20px 8px 19px 4px; border-radius: 10px; transition: background .25s ease; }
+.row:hover { background: rgba(248, 244, 234, .045); }
+.row:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.n { align-self: start; padding-top: 6px; font-size: 15px; font-weight: 500; color: var(--copper); }
+.body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--disp); letter-spacing: -.015em; }
+.sub { font-size: 15px; line-height: 1.45; color: var(--mut); }
+.go { justify-self: end; font-size: 22px; color: var(--dim); transition: transform .3s var(--ease), color .25s; }
+.row:hover .go { transform: translateX(5px); color: var(--amber); }
+.row.off { pointer-events: none; }
+.row.off .name, .row.off .n { color: var(--dim); }
+.row.off .go { visibility: hidden; }
+
+.state { font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.state::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; border: 1.5px solid currentColor; vertical-align: 0; }
+.state.up { color: var(--cyan); }
+.state.up::before { background: currentColor; animation: beat 2.4s ease-in-out infinite; }
+.state.down { color: var(--red); }
+
+/* QR card: dark modules on paper, framed in bronze, the way it sits on the deck's last slide */
+.share { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.qr { width: 100%; max-width: 300px; aspect-ratio: 1; padding: 8px; border-radius: 18px; background: var(--ink); box-shadow: 0 0 0 1.5px var(--bronze), 0 0 0 9px var(--bg), 0 0 0 10px rgba(226, 160, 106, .35), 0 30px 80px rgba(0, 0, 0, .55); }
+.qr svg { display: block; width: 100%; height: 100%; }
+.share-title { margin: 26px 0 0; font: 600 21px/1.2 var(--disp); letter-spacing: -.01em; }
+.url { margin: 10px 0 0; font-size: 14px; color: var(--amber); overflow-wrap: anywhere; user-select: all; }
+.note { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--dim); max-width: 280px; }
+.note.warn { color: var(--red); }
+.pick { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.pick select { font: 400 13px var(--mono); color: var(--ink); background: #151615; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+
+.foot { display: flex; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+
+/* reveal, as in the deck */
+.rv { opacity: 0; transform: translateY(14px); animation: rise .75s var(--ease) forwards; animation-delay: calc(.1s + var(--d, 0) * .08s); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+@keyframes beat { 50% { opacity: .35; } }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; align-items: start; }
+  /* on a phone the QR is for passing the page on to the person next to you */
+  .share { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; column-gap: 20px; text-align: left; padding: 20px; border: 1px solid var(--line); border-radius: 16px; }
+  .qr { grid-row: 1 / 6; width: 132px; padding: 4px; border-radius: 12px; box-shadow: 0 0 0 1.5px var(--bronze); }
+  .share-title { margin-top: 0; font-size: 18px; }
+  .note { max-width: none; }
+  .pick { margin-top: 10px; }
+  .foot { flex-direction: column; gap: 6px; }
+}
+@media (max-width: 420px) {
+  .row { grid-template-columns: 38px minmax(0, 1fr) 20px; }
+  .qr { width: 104px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv { animation: none; opacity: 1; transform: none; }
+  .state.up::before { animation: none; }
+}
