@@ -27,8 +27,13 @@ export function Drawer({ label, onClose, head, children, width = 440, className 
       if (e.key !== "Tab" || !el.contains(document.activeElement)) return;
       const f = [...el.querySelectorAll<HTMLElement>(sel)].filter((x) => x.offsetParent !== null);
       if (!f.length) return;
-      if (e.shiftKey && document.activeElement === f[0]) (e.preventDefault(), f[f.length - 1].focus());
-      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) (e.preventDefault(), f[0].focus());
+      if (e.shiftKey && document.activeElement === f[0]) {
+        e.preventDefault();
+        f[f.length - 1].focus();
+      } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) {
+        e.preventDefault();
+        f[0].focus();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => {

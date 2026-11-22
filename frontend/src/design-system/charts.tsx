@@ -137,7 +137,7 @@ export function HeatFlowChart({ rows, height = 190, title, empty = "No heat dema
         <ComposedChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -18 }}>
           <CartesianGrid vertical={false} stroke="rgb(var(--line))" />
           <XAxis dataKey="t" tick={axis} tickLine={false} axisLine={false} minTickGap={36} />
-          <YAxis tick={axis} tickLine={false} axisLine={false} width={44} tickFormatter={(v) => num(v, v < 10 ? 1 : 0)} />
+          <YAxis tick={axis} tickLine={false} axisLine={false} width={44} tickFormatter={(v) => num(v, v === 0 ? 0 : v < 1 ? 2 : v < 10 ? 1 : 0)} />
           <Tooltip content={tip} cursor={{ stroke: "rgb(var(--line-strong))", strokeDasharray: "3 3" }} />
           {HF.filter((s) => !s.line).map((s) => (
             <Area key={s.key} dataKey={s.key} stackId="1" type="monotone" stroke="rgb(var(--surface))" strokeWidth={1} fill={colorOf(s)} fillOpacity={s.key === "tank" ? 0.75 : 0.85} isAnimationActive={false} />
@@ -191,7 +191,7 @@ export function StackedBars<T extends Record<string, unknown>>({
         <ComposedChart data={rows} margin={{ top: 6, right: 4, bottom: 0, left: -12 }} barCategoryGap="28%">
           <CartesianGrid vertical={false} stroke="rgb(var(--line))" />
           <XAxis dataKey="__x" tick={axis} tickLine={false} axisLine={false} minTickGap={8} />
-          <YAxis tick={axis} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => num(v, decimals ?? (v < 10 ? 1 : 0))} />
+          <YAxis tick={axis} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => num(v, decimals ?? (v === 0 ? 0 : v < 1 ? 2 : v < 10 ? 1 : 0))} />
           <Tooltip content={tip} cursor={{ fill: "rgb(var(--surface-3) / 0.5)" }} />
           {series.map((s, i) => (
             <Bar

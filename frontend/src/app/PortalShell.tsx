@@ -107,7 +107,7 @@ export function PortalShell({ product, nav, title, actions, tabs, footer, childr
         </div>
         <ConnectionBanner />
         <header className="flex flex-wrap items-center gap-3 px-8 pt-6 max-lg:px-6 max-md:px-4 max-md:pt-4">
-          <h1 className="min-w-0 flex-1 text-lg font-semibold tracking-tight">{title}</h1>
+          <h1 className="min-w-0 flex-1 text-lg font-semibold tracking-tight max-md:basis-full">{title}</h1>
           {actions}
           <span className="hidden md:inline-flex">
             <MockPill />

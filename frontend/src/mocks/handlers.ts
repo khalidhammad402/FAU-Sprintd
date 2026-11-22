@@ -34,7 +34,14 @@ function lookup(url: URL, method = "GET"): JsonBodyType | undefined {
   const path = url.pathname.replace(/^.*\/api\/v1/, "");
   const exact = fixture(`${method} ${path}${url.search}`);
   if (exact !== undefined) return exact;
-  const key = Object.keys(be().rest).find((k) => k === `${method} ${path}` || k.startsWith(`${method} ${path}?`));
+  // same path: prefer the capture whose query shares the most parameters (e.g. the same resolution)
+  const want = [...url.searchParams.entries()].filter(([k]) => k !== "from" && k !== "to");
+  const candidates = Object.keys(be().rest).filter((k) => k === `${method} ${path}` || k.startsWith(`${method} ${path}?`));
+  const score = (k: string) => {
+    const q = new URLSearchParams(k.split("?")[1] ?? "");
+    return want.filter(([k2, v]) => q.get(k2) === v).length;
+  };
+  const key = candidates.sort((a, b) => score(b) - score(a))[0];
   return key ? (be().rest[key] as JsonBodyType) : undefined;
 }
 
