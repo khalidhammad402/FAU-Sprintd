@@ -94,6 +94,8 @@ class MockBackend {
     const data = { ...m.data } as Record<string, unknown>;
     for (const f of TIME_FIELDS) if (typeof data[f] === "string") data[f] = shiftIso(data[f] as string, ms);
     if (typeof data.slot === "number") data.slot = (data.slot as number) + (this.loop + this.dayOffset) * this.groups.length;
+    // the recording ran at its own speed: report the mock clock's current settings, not the recorded ones
+    if (m.type === "clock.tick") Object.assign(data, { slotSeconds: this.clock.slotSeconds, paused: this.clock.paused, algorithm: this.clock.algorithm, mode: this.clock.paused ? "paused" : "live" });
     return { ...m, time: shiftIso(m.time, ms), data };
   }
 
@@ -146,7 +148,8 @@ class MockBackend {
       const server = (d.toServer as string | null) ?? t.serverId;
       this.tasks.set(t.id, {
         ...t,
-        state: (state ?? t.state) as Task["state"],
+        // the recording does not know about operator holds: a held task stays paused, as on the real backend
+        state: (t.hold && state === "running" ? t.state : (state ?? t.state)) as Task["state"],
         serverId: server,
         siteId: server ? (this.servers.get(server)?.siteId ?? t.siteId) : t.siteId,
         progressPct: kind === "completed" ? 100 : t.progressPct,
