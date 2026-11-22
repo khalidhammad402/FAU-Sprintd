@@ -1,0 +1,10 @@
+{
+ "day": "2025-10-04",
+ "start_hour": 7,
+ "tank_kwh": 16.0,
+ "start_slot": 26524,
+ "pause_slot": 26564,
+ "resume_slot": 26584,
+ "task_id": "DEMO1-T1",
+ "end_slot": 26588
+}

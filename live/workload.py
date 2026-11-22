@@ -6,8 +6,8 @@ The real job run on the laptops: AI image recognition (handwritten digits, sciki
 - Model: MLPClassifier (1024-1024-512-10) trained once on scikit-learn's bundled digits dataset (1,797 images,
   upscaled from 8x8 to 32x32 pixels, no download), cached in the temp folder. Each work step classifies a batch of
   256 slightly noisy images (~1.6 million multiply-adds per image).
-- Total work = `seconds` of inference on this machine (throughput measured at start), so the scheduler's demo
-  clock decides how long a task runs: runtime_slots x SLOT_SECONDS.
+- Total work = `seconds` of inference on this machine (time actually worked; paused time does not count), so the
+  scheduler's demo clock decides how long a task runs: runtime_slots x SLOT_SECONDS.
 - Starts from `start` (0..1): a task moved from another laptop continues where it stopped (checkpoint).
 - Writes progress (0..1) to the progress file twice a second = its checkpoint, plus images classified so far.
 - Pausing the process (psutil.suspend) stops the work, so progress stops too.
@@ -125,26 +125,24 @@ def main():
     a = ap.parse_args()
 
     job = make_job(a.kind)
-    # calibrate: how many work steps this machine does per second
-    t0, n = time.perf_counter(), 0
-    while time.perf_counter() - t0 < 0.3:
-        job.step()
-        n += 1
-    steps_per_s = n / (time.perf_counter() - t0)
-    total = max(1, int(a.seconds * steps_per_s))
-    done = int(a.start * total)
+    # progress = time this process has actually worked / the task's runtime. A gap between two work steps longer
+    # than a second means the process was suspended (paused by the scheduler): that time does not count, so a
+    # paused task keeps its progress and continues where it stopped.
+    remaining = max(0.0, (1.0 - a.start) * a.seconds)
 
     helpers = [mp.Process(target=burner, args=(a.kind, i + 1), daemon=True) for i in range(max(0, a.threads - 1))]
     for h in helpers:
         h.start()
-
-    last = 0.0
-    while done < total:
+    worked, prev, last = 0.0, time.monotonic(), 0.0
+    while worked < remaining:
         job.step()
-        done += 1
-        if time.monotonic() - last > 0.5:
-            write_progress(a.progress_file, done / total, job)
-            last = time.monotonic()
+        now = time.monotonic()
+        worked += min(now - prev, 1.0) if now - prev < 1.0 else 0.0
+        prev = now
+        if now - last > 0.5:
+            write_progress(a.progress_file, a.start + (1.0 - a.start) * min(1.0, worked / remaining)
+                           if remaining else 1.0, job)
+            last = now
     write_progress(a.progress_file, 1.0, job)
     for h in helpers:
         h.terminate()

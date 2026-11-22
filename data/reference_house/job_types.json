@@ -1,0 +1,244 @@
+{
+ "_readme": [
+  "Job-type catalogue used by make_jobs.py to build data/jobs.json for the whole demand period.",
+  "Edit the numbers here, then run: python make_jobs.py",
+  "Every number has a 'source'. ASSUMPTION = our own choice, replace it when you have a measured value.",
+  "power_kw of a task = gpus x hardware.kw_per_gpu (GPU board power + share of the host server)."
+ ],
+ "hardware": {
+  "gpu": "NVIDIA L4 (24 GB)",
+  "gpu_board_w": 72,
+  "gpu_board_w_source": "NVIDIA L4 Tensor Core GPU datasheet: max thermal design power 72 W. MLPerf Inference v6.1 summary.xlsx (data/sources) has throughput only, no power measurements, so the datasheet value is used.",
+  "host_w_per_gpu": 50,
+  "host_w_per_gpu_source": "ASSUMPTION: CPU, memory, disks and fans of a 4-GPU host (~200 W) shared over its 4 GPUs. Replace with a wall-plug measurement of your server.",
+  "kw_per_gpu": 0.122
+ },
+ "arrival_profile": {
+  "hour_share": [
+   0.0371,
+   0.0375,
+   0.0531,
+   0.0529,
+   0.042,
+   0.0418,
+   0.0418,
+   0.0455,
+   0.0445,
+   0.0485,
+   0.0446,
+   0.0393,
+   0.038,
+   0.0337,
+   0.029,
+   0.0277,
+   0.0685,
+   0.0433,
+   0.0368,
+   0.028,
+   0.0369,
+   0.036,
+   0.0457,
+   0.0479
+  ],
+  "source": "Alibaba cluster-trace-gpu-v2020, pai_task_table: share of 732,691 completed GPU tasks started in each hour of the day (68 days, July-Aug 2020). The trace keeps time of day but shifts timestamps by a constant, so the hours are in the trace's own time zone (likely UTC+8). The profile is fairly flat: 2.8 % to 6.9 % per hour."
+ },
+ "trace_facts": {
+  "_note": "Computed from data/sources/pai_task_table.csv (completed tasks with a GPU request); used to choose the job types below.",
+  "task_duration_min": {
+   "p10": 0.7,
+   "p25": 2.2,
+   "p50": 10.2,
+   "p75": 62.6,
+   "p90": 211.6,
+   "p95": 395.5,
+   "p99": 1145.2
+  },
+  "gpu_hours_by_task_duration": {
+   "<15 min": 0.013,
+   "15-60 min": 0.052,
+   "1-2 h": 0.064,
+   "2-8 h": 0.258,
+   "8-24 h": 0.312,
+   ">24 h": 0.302
+  },
+  "gpu_request_share": {
+   "<=25 % of a GPU": 0.362,
+   "26-50 %": 0.158,
+   "1 GPU": 0.455,
+   ">1 GPU": 0.024
+  },
+  "median_duration_by_gpu_min": {
+   "T4 (inference)": 5.7,
+   "P100": 25.7,
+   "V100": 41.5,
+   "V100M32": 45.1
+  },
+  "workload_tags_share_of_tagged": {
+   "bert": 0.53,
+   "ctr": 0.26,
+   "nmt": 0.1,
+   "inception": 0.05,
+   "graphlearn": 0.04,
+   "other": 0.02
+  },
+  "repeated_instances": "68.7 % of instances belong to a group that repeats 5 or more times (pai_group_tag_table) -> jobs repeating every day is realistic"
+ },
+ "prices": {
+  "usd_to_chf": 0.8,
+  "usd_to_chf_source": "ASSUMPTION: set the current exchange rate.",
+  "gpu_hour_usd": {
+   "on_demand": 1.01,
+   "spot": 0.36
+  },
+  "gpu_hour_source": "AWS g6.xlarge (1x NVIDIA L4), eu-central-1 Frankfurt: on-demand ~1.0064 USD/h (aws-pricing.com), spot ~0.356 USD/h lowest AZ (doit.com). Zurich eu-central-2: 1.085 / 0.337 USD/h (devzero.io). Third-party trackers, retrieved 2026-11-21.",
+  "priority_price": {
+   "critical": "on_demand",
+   "normal": "mid",
+   "flexible": "spot"
+  },
+  "priority_price_source": "ASSUMPTION: critical work is sold at on-demand price, flexible at spot price, normal in between."
+ },
+ "job_types": [
+  {
+   "type": "transcription",
+   "name": "Transcribe call recordings",
+   "customer": "acme",
+   "priority": "critical",
+   "jobs_per_day": 24,
+   "deadline_h": 3,
+   "tasks": [
+    {
+     "name": "transcribe",
+     "count": 1,
+     "runtime_min": 60,
+     "gpus": 1.0,
+     "interruptible": false
+    }
+   ],
+   "source": "Inference job (Whisper-type speech model; Whisper is an MLPerf Inference v6.1 benchmark). One full GPU like 45.5 % of trace tasks; 60 min is above the trace median for inference GPUs (T4: 5.7 min, p90 119 min) because a batch of recordings is bundled. Deadline and volume: ASSUMPTION."
+  },
+  {
+   "type": "ctr_retrain",
+   "name": "Retrain recommendation (CTR) model",
+   "customer": "globex",
+   "priority": "normal",
+   "jobs_per_day": 12,
+   "deadline_h": 12,
+   "tasks": [
+    {
+     "name": "train",
+     "count": 1,
+     "runtime_min": 120,
+     "gpus": 1.0,
+     "interruptible": true
+    }
+   ],
+   "source": "'ctr' is the 2nd most common workload tag (26 % of tagged instances). 120 min sits between the trace p75 (63 min) and p90 (212 min). Deadline (ready next morning) and volume: ASSUMPTION."
+  },
+  {
+   "type": "embedding",
+   "name": "Embed document archive (BERT)",
+   "customer": "acme",
+   "priority": "flexible",
+   "jobs_per_day": 20,
+   "deadline_h": 24,
+   "tasks": [
+    {
+     "name": "embed batch",
+     "count": 4,
+     "runtime_min": 30,
+     "gpus": 0.5,
+     "interruptible": true
+    },
+    {
+     "name": "merge results",
+     "count": 1,
+     "runtime_min": 15,
+     "gpus": 0.5,
+     "interruptible": true,
+     "after_all": true
+    }
+   ],
+   "source": "'bert' is the most common workload tag (53 % of tagged instances). Half a GPU like 15.8 % of trace tasks (26-50 % GPU request). 30 min batches ~ trace p50-p75. Merge waits for all batches. Volume: ASSUMPTION."
+  },
+  {
+   "type": "finetune",
+   "name": "Fine-tune language model (NMT/BERT)",
+   "customer": "globex",
+   "priority": "flexible",
+   "jobs_per_day": 3,
+   "deadline_h": 72,
+   "tasks": [
+    {
+     "name": "train worker",
+     "count": 4,
+     "runtime_min": 480,
+     "gpus": 1.0,
+     "interruptible": true
+    },
+    {
+     "name": "evaluate",
+     "count": 1,
+     "runtime_min": 30,
+     "gpus": 1.0,
+     "interruptible": true,
+     "after_all": true
+    }
+   ],
+   "source": "Long training tasks carry most GPU time in the trace: tasks of 8 h or more hold 61 % of GPU-hours. 4 workers + an evaluator follows the trace's worker/evaluator roles. Checkpointed, so interruptible. Deadline and volume: ASSUMPTION."
+  },
+  {
+   "type": "sweep",
+   "name": "Hyper-parameter sweep",
+   "customer": "acme",
+   "priority": "flexible",
+   "jobs_per_day": 20,
+   "deadline_h": 48,
+   "tasks": [
+    {
+     "name": "trial",
+     "count": 8,
+     "runtime_min": 15,
+     "gpus": 0.25,
+     "interruptible": true
+    }
+   ],
+   "source": "Short tasks on a GPU share: 36.2 % of trace tasks request 25 % of a GPU or less; trace median duration 10 min (rounded up to one 15-min slot). Volume: ASSUMPTION."
+  },
+  {
+   "type": "image",
+   "name": "Image recognition (measured on our laptop)",
+   "customer": "acme",
+   "priority": "flexible",
+   "jobs_per_day": 16,
+   "deadline_h": 24,
+   "tasks": [
+    {
+     "name": "classify batch",
+     "count": 1,
+     "runtime_min": 30,
+     "power_kw": 1.0,
+     "interruptible": true
+    }
+   ],
+   "measured": {
+    "host": "LAPTOP-3KIFGH78",
+    "measured_at": "2026-11-22T01:44:52",
+    "cpu": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+    "cores": 16,
+    "job": "image recognition: scikit-learn neural network (MLP, hidden layers 1024-512) on digit images upscaled to 32x32 pixels, batches of 256",
+    "runtime_s": 120.0,
+    "images": 2719744,
+    "images_per_s": 22664.4,
+    "accuracy": 1.0,
+    "power_meter": "battery discharge rate (WMI BatteryStatus.DischargeRate)",
+    "power_idle_w": 17.71,
+    "power_load_w": 29.29,
+    "energy_wh": 0.9762,
+    "energy_per_image_j": 0.00129,
+    "images_per_server_hour": 2785997951
+   },
+   "source": "MEASURED on our laptop (LAPTOP-3KIFGH78, 2026-11-22T01:44:52): 2,719,744 images in 120 s (22,664/s), laptop 29.3 W under load (battery discharge meter), 0.98 Wh. Scaling (ASSUMPTION): same energy per image on the 1 kW server -> 2,785,997,951 images per server-hour; one job = 30 min of a 1 kW server = 1,392,998,975 images. Interruptible: the process is suspended/resumed and keeps its progress. Deadline 24 h and 16 jobs/day: ASSUMPTION."
+  }
+ ]
+}

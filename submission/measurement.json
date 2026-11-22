@@ -1,0 +1,35 @@
+{
+ "host": "LAPTOP-3KIFGH78",
+ "measured_at": "2026-11-22T01:44:52",
+ "cpu": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+ "cores": 16,
+ "job": "image recognition: scikit-learn neural network (MLP, hidden layers 1024-512) on digit images upscaled to 32x32 pixels, batches of 256",
+ "runtime_s": 120.0,
+ "images": 2719744,
+ "images_per_s": 22664.4,
+ "accuracy": 1.0,
+ "cpu_pct_job_process": 502.4,
+ "cpu_pct_machine": 39.6,
+ "power_meter": "battery discharge rate (WMI BatteryStatus.DischargeRate)",
+ "power_idle_w": 17.71,
+ "power_load_w": 29.29,
+ "power_samples": 35,
+ "power_readings": {
+  "idle_rate_w": 17.711,
+  "idle_from_capacity_w": null,
+  "load_rate_w": 29.28634285714286,
+  "load_from_capacity_w": null
+ },
+ "energy_j": 3514.4,
+ "energy_wh": 0.9762,
+ "energy_per_image_j": 0.00129,
+ "energy_per_1000_images_wh": 0.0004,
+ "scaling": "ASSUMPTION: same energy per image on the 1 kW reference server (whole-laptop power, so conservative); images per server-hour = 3.6e6 J / energy per image",
+ "images_per_server_hour": 2785997951,
+ "job_definition": {
+  "server_minutes": 30,
+  "images_per_job": 1392998975,
+  "server_power_kw": 1.0,
+  "laptop_seconds_per_job": 61462
+ }
+}

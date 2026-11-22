@@ -1,0 +1,2 @@
+site_id,name,type,lat,lon,building_height_m,tank_kwh,owner
+H1,Reference house Basel,household,47.56,7.59,9,35.0,h1owner

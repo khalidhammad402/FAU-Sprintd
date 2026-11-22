@@ -83,8 +83,10 @@ def collect():
     add("physics", "Heat pump", "none (heat used directly)", "BRIEF", "Brief simplification.")
 
     # --- economics
-    add("economics", "Electricity price", f"{config.ELECTRICITY_CHF_PER_KWH} CHF/kWh", "ASSUMPTION",
-        "Brief: ElCom 2026, IWB Basel, H4, total price incl. all fees: confirm the value set in config.py.")
+    add("economics", "Electricity price", f"{config.ELECTRICITY_CHF_PER_KWH} CHF/kWh",
+        "SOURCE" if abs(config.ELECTRICITY_CHF_PER_KWH - 0.3325) < 1e-9 else "ASSUMPTION",
+        "ElCom 2026, Basel, IWB, H4, Standard: total 33.25 Rp./kWh = grid 11.41 + metering 1.20 + energy 10.89 "
+        "+ levies 7.44 + grid surcharge 2.30 (strompreis.elcom.admin.ch/municipality/2701?period=2026&category=H4).")
     add("economics", "Value of heat", f"electricity price / {config.HEAT_PUMP_COP}", "BRIEF",
         "Brief: heat replaces a heat pump with efficiency 2.5.")
     for p, usd in config.GPU_HOUR_USD.items():
@@ -102,11 +104,12 @@ def collect():
     cat = _job_types()
     if cat:
         for jt in cat["job_types"]:
-            tasks = "; ".join(f"{t.get('count', 1)}x {t['runtime_min']} min @ {t['gpus']} GPU"
+            tasks = "; ".join(f"{t.get('count', 1)}x {t['runtime_min']} min @ "
+                              f"{str(t['gpus']) + ' GPU' if 'gpus' in t else str(t['power_kw']) + ' kW'}"
                               f"{'' if t.get('interruptible', True) else ' (not interruptible)'}" for t in jt["tasks"])
             add("jobs", f"Job type: {jt['name']}",
                 f"{jt['jobs_per_day']}/day, {jt['priority']}, deadline {jt['deadline_h']} h: {tasks}",
-                "SOURCE + ASSUMPTION", jt["source"])
+                "MEASURED + ASSUMPTION" if "measured" in jt else "SOURCE + ASSUMPTION", jt["source"])
         add("jobs", "Arrival hours", "Alibaba trace hourly profile", "SOURCE",
             cat["arrival_profile"]["source"])
     add("jobs", "Jobs per day over the year", "the same every day (no weekday or season pattern)", "ASSUMPTION",

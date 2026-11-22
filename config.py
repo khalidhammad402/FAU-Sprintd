@@ -33,8 +33,11 @@ MPC_RESERVE_KWH = 3.0         # try to keep this much heat in the tank as a safe
 W_RESERVE = 10.0              # cost per kWh the tank goes below the buffer
 MPC_TIME_LIMIT_S = 5
 
-# --- economics (ASSUMPTION: replace with ElCom price) ------------------------------------
-ELECTRICITY_CHF_PER_KWH = 0.33
+# --- economics ---------------------------------------------------------------------------
+# ElCom 2026, Basel (BFS 2701), IWB, category H4, product Standard, total incl. all fees: 33.25 Rp./kWh
+# (grid 11.41 + metering 1.20 + energy 10.89 + levies 7.44 + grid surcharge 2.30). Read 2026-11-22 from
+# https://www.strompreis.elcom.admin.ch/municipality/2701?period=2026&category=H4
+ELECTRICITY_CHF_PER_KWH = 0.3325
 HEAT_PUMP_COP = 2.5           # heat value = electricity price / 2.5 (case brief)
 # Compute income in CHF per kWh of server electricity (metrics: income = task energy_kwh x price).
 # Derived from cloud GPU prices (see data/job_types.json "prices"):

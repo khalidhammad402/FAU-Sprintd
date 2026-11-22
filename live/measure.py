@@ -107,7 +107,7 @@ def main():
     res = {
         "host": socket.gethostname(), "measured_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "cpu": platform.processor(), "cores": psutil.cpu_count(),
-        "job": "image recognition: scikit-learn MLP (64-128-64-10) on 8x8 digits, batches of %d" % BATCH,
+        "job": "image recognition: scikit-learn neural network (MLP, hidden layers 1024-512) on digit images upscaled to 32x32 pixels, batches of %d" % BATCH,
         "runtime_s": round(runtime, 2), "images": job.seen, "images_per_s": round(images_per_s, 1),
         "accuracy": round(job.correct / job.seen, 4),
         "cpu_pct_job_process": cpu_job, "cpu_pct_machine": cpu_total,

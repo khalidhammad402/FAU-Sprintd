@@ -1,0 +1,2 @@
+site_id,servers,demand_kwh,produced_kwh,delivered_kwh,dumped_kwh,unmet_kwh,coverage_pct,dumped_share_pct,utilisation_pct,load_factor_pct,server_running_h,server_hours_sold,electricity_kwh,final_tank_kwh
+H1,3,31306.71875,15537.4018,14310.3863625,1227.0154375000038,16996.3323875,45.71027221592809,7.8971725987031105,85.88089802130898,73.90316685692541,22569.5,19421.752249999998,19421.752249999998,0.0

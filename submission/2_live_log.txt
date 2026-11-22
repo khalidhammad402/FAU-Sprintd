@@ -1,0 +1,90 @@
+DigitalHeat - must-have 2: the scheduler pauses and resumes a REAL process on the heat signal
+Generated 2026-11-22 03:56 by: python -m live.proof
+
+Same Engine, scheduler and tank model as the yearly balance (core/engine.py, core/scheduler.py), on the
+reference house (3 x 1 kW, 35 kWh tank, Basel 2025 demand), 2025-10-04: warm day, heating needed in the evening.
+Live demo job list: 3 image-recognition batches (12 h of a 1 kW server each, can be paused, deadline 72 h).
+H1-S1 is this laptop: a real Python process classifies images (live/workload.py); the agent suspends and
+resumes it with the OS (psutil) when the scheduler says so over MQTT. H1-S2 and H1-S3 are simulated.
+
+[heat]   = the heat signal every 15-min slot (house demand, tank level, dumped heat) and what runs on the laptop
+[master] = the scheduler's decision for the laptop, sent over MQTT
+[agent]  = what the laptop did with the real process (pid, pause, resume, progress, images classified)
+Expected: start (heat wanted) -> PAUSE when the tank is full -> RESUME when the evening heating drains it.
+
+03:52:54 [agent]  connected as LAPTOP-3KIFGH78, waiting for commands on dh/server/H1-S1/cmd
+03:52:59 [agent]  run    DEMO1-T1 (classify images) pid 36996, 144 s of work, from 0%
+03:52:59 [master] reference house, 2025-10-04 07:00:00: tank 16 of 35 kWh, 3 image-recognition jobs arrive (12 h each, can be paused, deadline 72 h)
+03:52:59 [master] agent online: H1-S1 is this laptop (H1-S2, H1-S3 simulated). 1 slot (15 min) = 3 s
+03:52:59 [heat]   07:00  house needs 0.12 kWh/15 min, tank  16.5 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 2%
+03:52:59 [master] scheduler -> MQTT -> H1-S1: RUN DEMO1-T1
+03:53:02 [heat]   07:15  house needs 0.12 kWh/15 min, tank  17.0 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 0%
+03:53:05 [heat]   07:30  house needs 0.12 kWh/15 min, tank  17.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 1%
+03:53:08 [heat]   07:45  house needs 0.12 kWh/15 min, tank  17.9 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 3%
+03:53:11 [heat]   08:00  house needs 0.12 kWh/15 min, tank  18.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 5%
+03:53:14 [heat]   08:15  house needs 0.12 kWh/15 min, tank  18.9 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 7%
+03:53:17 [heat]   08:30  house needs 0.12 kWh/15 min, tank  19.3 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 9%
+03:53:20 [heat]   08:45  house needs 0.12 kWh/15 min, tank  19.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 11%
+03:53:23 [heat]   09:00  house needs 0.12 kWh/15 min, tank  20.3 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 14%
+03:53:26 [heat]   09:15  house needs 0.12 kWh/15 min, tank  20.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 16%
+03:53:29 [heat]   09:30  house needs 0.12 kWh/15 min, tank  21.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 18%
+03:53:32 [heat]   09:45  house needs 0.12 kWh/15 min, tank  21.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 20%
+03:53:35 [heat]   10:00  house needs 0.12 kWh/15 min, tank  22.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 22%
+03:53:38 [heat]   10:15  house needs 0.12 kWh/15 min, tank  22.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 24%
+03:53:41 [heat]   10:30  house needs 0.12 kWh/15 min, tank  23.1 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 26%
+03:53:44 [heat]   10:45  house needs 0.12 kWh/15 min, tank  23.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 28%
+03:53:47 [heat]   11:00  house needs 0.12 kWh/15 min, tank  24.1 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 30%
+03:53:50 [heat]   11:15  house needs 0.12 kWh/15 min, tank  24.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 33%
+03:53:53 [heat]   11:30  house needs 0.12 kWh/15 min, tank  25.0 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 35%
+03:53:56 [heat]   11:45  house needs 0.12 kWh/15 min, tank  25.5 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 37%
+03:53:59 [heat]   12:00  house needs 0.12 kWh/15 min, tank  26.0 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 39%
+03:54:02 [heat]   12:15  house needs 0.12 kWh/15 min, tank  26.5 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 41%
+03:54:05 [heat]   12:30  house needs 0.12 kWh/15 min, tank  26.9 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 43%
+03:54:08 [heat]   12:45  house needs 0.12 kWh/15 min, tank  27.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 45%
+03:54:11 [heat]   13:00  house needs 0.12 kWh/15 min, tank  27.9 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 47%
+03:54:14 [heat]   13:15  house needs 0.12 kWh/15 min, tank  28.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 49%
+03:54:17 [heat]   13:30  house needs 0.12 kWh/15 min, tank  28.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 51%
+03:54:20 [heat]   13:45  house needs 0.12 kWh/15 min, tank  29.3 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 53%
+03:54:23 [heat]   14:00  house needs 0.12 kWh/15 min, tank  29.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 55%
+03:54:26 [heat]   14:15  house needs 0.12 kWh/15 min, tank  30.3 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 57%
+03:54:29 [heat]   14:30  house needs 0.12 kWh/15 min, tank  30.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 60%
+03:54:32 [heat]   14:45  house needs 0.12 kWh/15 min, tank  31.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 62%
+03:54:35 [heat]   15:00  house needs 0.12 kWh/15 min, tank  31.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 64%
+03:54:38 [heat]   15:15  house needs 0.12 kWh/15 min, tank  32.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 66%
+03:54:41 [heat]   15:30  house needs 0.12 kWh/15 min, tank  32.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 68%
+03:54:44 [heat]   15:45  house needs 0.12 kWh/15 min, tank  33.1 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 70%
+03:54:47 [heat]   16:00  house needs 0.12 kWh/15 min, tank  33.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 72%
+03:54:50 [heat]   16:15  house needs 0.12 kWh/15 min, tank  34.1 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 74%
+03:54:53 [heat]   16:30  house needs 0.12 kWh/15 min, tank  34.5 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 running 76%
+03:54:56 [heat]   16:45  house needs 0.12 kWh/15 min, tank  35.0 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 running 79%
+03:54:59 [agent]  pause  DEMO1-T1 (classify images) at 81%
+03:54:59 [heat]   17:00  house needs 0.12 kWh/15 min, tank  34.9 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 paused 79%
+03:54:59 [master] scheduler -> MQTT -> H1-S1: PAUSE DEMO1-T1
+03:55:02 [heat]   17:15  house needs 0.12 kWh/15 min, tank  34.8 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 paused 79%
+03:55:05 [heat]   17:30  house needs 0.12 kWh/15 min, tank  34.6 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 paused 79%
+03:55:08 [heat]   17:45  house needs 0.12 kWh/15 min, tank  34.5 kWh, dumped 0.00  => TANK FULL: heat not needed  | laptop: DEMO1-T1 paused 79%
+03:55:11 [heat]   18:00  house needs 0.95 kWh/15 min, tank  33.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:14 [heat]   18:15  house needs 0.95 kWh/15 min, tank  32.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:17 [heat]   18:30  house needs 0.95 kWh/15 min, tank  31.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:20 [heat]   18:45  house needs 0.95 kWh/15 min, tank  30.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:23 [heat]   19:00  house needs 0.98 kWh/15 min, tank  29.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:26 [heat]   19:15  house needs 0.98 kWh/15 min, tank  28.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:29 [heat]   19:30  house needs 0.98 kWh/15 min, tank  27.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:32 [heat]   19:45  house needs 0.98 kWh/15 min, tank  26.8 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:35 [heat]   20:00  house needs 1.06 kWh/15 min, tank  25.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:38 [heat]   20:15  house needs 1.06 kWh/15 min, tank  24.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:41 [heat]   20:30  house needs 1.06 kWh/15 min, tank  23.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:44 [heat]   20:45  house needs 1.06 kWh/15 min, tank  22.5 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:47 [heat]   21:00  house needs 1.04 kWh/15 min, tank  21.5 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:50 [heat]   21:15  house needs 1.04 kWh/15 min, tank  20.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:53 [heat]   21:30  house needs 1.04 kWh/15 min, tank  19.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:56 [heat]   21:45  house needs 1.04 kWh/15 min, tank  18.4 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 paused 79%
+03:55:59 [agent]  resume DEMO1-T1 (classify images) at 81%
+03:55:59 [heat]   22:00  house needs 1.10 kWh/15 min, tank  17.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 81%
+03:55:59 [master] scheduler -> MQTT -> H1-S1: RESUME DEMO1-T1
+03:56:02 [heat]   22:15  house needs 1.10 kWh/15 min, tank  17.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 82%
+03:56:05 [heat]   22:30  house needs 1.10 kWh/15 min, tank  16.7 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 85%
+03:56:08 [heat]   22:45  house needs 1.10 kWh/15 min, tank  16.2 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 86%
+03:56:11 [heat]   23:00  house needs 1.17 kWh/15 min, tank  15.6 kWh, dumped 0.00  => heat wanted                 | laptop: DEMO1-T1 running 89%
+03:56:16 [agent]  stop   DEMO1-T1 (classify images) at 92%
+03:56:17 [master] end of the demo stretch: remaining work stopped
