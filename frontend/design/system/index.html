@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DigitalHeat · Design system</title>
+  <link rel="stylesheet" href="../assets/css/dh.css" />
+  <link rel="stylesheet" href="../assets/css/ops.css" />
+  <style>
+    body { background: var(--ops-bg); background-image: linear-gradient(rgba(148,163,184,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.04) 1px, transparent 1px); background-size: 32px 32px; }
+    .ds { max-width: 1360px; margin: 0 auto; padding: 40px 32px 96px; }
+    .ds-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+    .ds-head h1 { font-size: 40px; font-weight: 300; letter-spacing: -0.03em; line-height: 1.05; margin-top: 18px; }
+    .ds-head p { color: var(--text-2); max-width: 62ch; margin-top: 10px; font-size: 16px; }
+    .ds-sec { margin-top: 56px; }
+    .ds-sec > h2 { font-size: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+    .ds-sec > h2 span { font: 500 12px var(--font-num); color: var(--text-3); letter-spacing: .08em; }
+    .ds-sec > p { color: var(--text-2); max-width: 78ch; margin-bottom: 20px; }
+    .ds-grid { display: grid; gap: 16px; }
+    .ds-g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ds-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ds-g6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 1100px) { .ds-g6 { grid-template-columns: repeat(3, 1fr); } .ds-g3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px) { .ds-g6, .ds-g3, .ds-g2 { grid-template-columns: 1fr; } .ds { padding: 24px 16px 96px; } }
+    .ds-swatch { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--ops-panel-solid); }
+    .ds-swatch__chip { height: 76px; display: flex; align-items: flex-end; padding: 10px 12px; color: #07111F; font: 600 12px var(--font-num); }
+    .ds-swatch__body { padding: 12px 14px 14px; font-size: 12px; }
+    .ds-swatch__body h3 { font: 600 13px var(--font-num); }
+    .ds-swatch__body p { color: var(--text-2); margin: 4px 0 10px; min-height: 34px; }
+    .ds-ratio { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 8px; border-radius: 8px; font: 500 11px var(--font-num); margin-top: 4px; }
+    .ds-pass { font-weight: 700; font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid currentColor; }
+    .ds-spec { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--ops-panel-solid); display: flex; flex-direction: column; }
+    .ds-spec__head { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); }
+    .ds-spec__head h3 { font: 600 14px var(--font-num); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ds-spec__head p { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+    .ds-spec__data { font: 400 11px var(--font-num); color: var(--text-3); margin-top: 6px; }
+    .ds-stage { padding: 20px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; position: relative; flex: 1; align-content: flex-start; }
+    .ds-stage[data-theme="dark"] { background: #0A1525; }
+    .ds-stage[data-theme="light"] { background: var(--light-bg); color: var(--ink); }
+    .ds-stage--col { flex-direction: column; align-items: stretch; }
+    .ds-two { display: grid; grid-template-columns: 1fr 1fr; flex: 1; }
+    .ds-two > .ds-stage + .ds-stage { border-left: 1px solid var(--line); }
+    @media (max-width: 720px) { .ds-two { grid-template-columns: 1fr; } }
+    .ds-type { display: grid; grid-template-columns: 90px 1fr; gap: 6px 16px; align-items: baseline; }
+    .ds-type code { font: 500 12px var(--font-num); color: var(--text-3); }
+    .ds-motion td, .ds-motion th { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; vertical-align: top; }
+    .ds-motion th { font-size: 12px; color: var(--text-2); }
+    .ds-motion code { font: 500 12px var(--font-num); color: var(--text-2); }
+    .ds-radius { width: 84px; height: 56px; border: 1px solid var(--line-2); background: var(--surface-2); display: grid; place-items: center; font: 500 12px var(--font-num); }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="../assets/vendor/htm-preact-standalone.umd.js"></script>
+  <script src="../assets/js/sampleData.js"></script>
+  <script src="../assets/js/sim.js"></script>
+  <script src="../assets/js/kit.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script src="../assets/js/map.js"></script>
+  <script src="../assets/js/system.js"></script>
+</body>
+</html>
