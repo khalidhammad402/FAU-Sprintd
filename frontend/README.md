@@ -10,6 +10,10 @@ Three role-based experiences on one codebase, wired to the FastAPI backend in th
 
 The login screen has one-click buttons for the three roles.
 
+[![Walkthrough video, 9 min with voiceover](../docs/media/walkthrough-thumbnail.jpg)](../docs/media/DigitalHeat_walkthrough.mp4)
+
+Walkthrough video (9 min, voiceover): [`docs/media/DigitalHeat_walkthrough.mp4`](../docs/media/DigitalHeat_walkthrough.mp4).
+
 ## Run
 
 ```bash

@@ -59,7 +59,7 @@ export default function SiteDrawer({ id }: { id: string }) {
             <SiteAlerts siteId={id} />
           </>
         )}
-        {tab === "servers" && <ServerGrid siteId={id} onServer={(s) => set({ server: s })} />}
+        {tab === "servers" && <ServerGrid narrow siteId={id} onServer={(s) => set({ server: s })} />}
         {tab === "jobs" && <SiteJobs siteId={id} onTask={(t) => set({ task: t })} />}
         {tab === "history" && <SiteHistory siteId={id} />}
       </div>

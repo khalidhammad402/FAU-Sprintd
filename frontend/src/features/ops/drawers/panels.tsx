@@ -234,13 +234,14 @@ export function ServerCard({ s, onClick, nowMs }: { s: Server; onClick?: () => v
   );
 }
 
-export function ServerGrid({ siteId, onServer }: { siteId: string; onServer: (id: string) => void }) {
+/** `narrow`: one card per row (inside the 440 px drawer two cards side by side are too cramped) */
+export function ServerGrid({ siteId, onServer, narrow }: { siteId: string; onServer: (id: string) => void; narrow?: boolean }) {
   const { list, q } = useSiteServerList(siteId);
   const nowMs = Date.now();
   return (
     <QueryState query={q} skeleton={<Skeleton className="h-40" />} empty={<EmptyState compact title="No servers here" body="Servers appear when a rack is installed at this site." />}>
       {() => (
-        <div className="grid gap-2.5 sm:grid-cols-2">
+        <div className={narrow ? "grid gap-2.5" : "grid gap-2.5 sm:grid-cols-2 2xl:grid-cols-3"}>
           {list.map((s) => (
             <ServerCard key={s.id} s={s} nowMs={nowMs} onClick={() => onServer(s.id)} />
           ))}
