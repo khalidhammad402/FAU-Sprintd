@@ -20,7 +20,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 import config
 
-OUT = os.path.join(config.RESULTS_DIR, "DigitalHeat_Jury.xlsx")
+OUT = os.environ.get("DH_JURY_OUT", os.path.join(config.RESULTS_DIR, "DigitalHeat_Jury.xlsx"))
 FONT = "Arial"
 C = {"heat": "E8742A", "tank": "2F6FB0", "backup": "8C8C8C", "dumped": "F2B134", "unmet": "C0392B",
      "ink": "1F2937", "muted": "6B7280", "line": "D1D5DB", "band": "F3F4F6", "good": "D9F2E3", "bad": "F9D6D5",
@@ -215,8 +215,8 @@ def main():
                                                                 "Swiss HVAC plumbing", "input"),
         ("Hardware life", 5, "0", "years", "GPU servers: 3–5 years economic life (assumption)", "input"),
         ("University co-funding of hardware", 0, PCT, "%", "pitch option: 30 % for priority access", "input"),
-        ("Electricity price", 0.25, '0.000', "CHF/kWh", "campus/commercial tariff (assumption); brief: ElCom 2026 "
-                                                        "IWB H4 for households", "input"),
+        ("Electricity price", 0.2601, '0.0000', "CHF/kWh", "ElCom 2026, Basel, IWB, business category C5 "
+                                                          "(medium voltage), total incl. all fees", "input"),
         ("Heat-pump efficiency (COP)", 2.5, '0.0', "", "Case brief", "input"),
         ("Value of heat", "=IF(B10>0,B9/B10,0)", '0.000', "CHF/kWh", "electricity price ÷ COP (case brief)", "calc"),
         ("Idle power (share of full power)", 0.35, PCT, "%", "idle servers still draw power (assumption)", "input"),
@@ -442,8 +442,10 @@ def main():
         ("Server and heat recovery", "1 kW per server, 80 % of the heat recovered into water", "BRIEF", ""),
         ("Buffer tank", f"{g['tank_kwh']:,.0f} kWh", "ASSUMPTION", "35 kWh house tank scaled with demand (~19 m³ water)"),
         ("Value of heat", "electricity price ÷ 2.5", "BRIEF", "heat replaces a heat pump"),
-        ("Electricity price", "0.25 CHF/kWh", "ASSUMPTION", "campus/commercial tariff; brief's household price: "
-                                                             "ElCom 2026 IWB H4"),
+        ("Electricity price", "0.2601 CHF/kWh", "SOURCE", "ElCom 2026, Basel, IWB, category C5 (business, medium "
+                                                           "voltage): grid 8.67 + metering 0.16 + energy 9.10 + levies "
+                                                           "5.79 + grid surcharge 2.30 Rp/kWh. strompreis.elcom.admin.ch"
+                                                           "/municipality/2701?period=2026&category=C5"),
         ("Job mix", "student labs (weekdays 9–18, semester), PhD/R&D training (24 h deadline), genomics (48 h), "
                     "external batch (overnight, 12 h)", "ASSUMPTION", "sized for ~60 % utilisation"),
         ("Job durations", "2–4 h tasks", "SOURCE", "Alibaba GPU cluster trace 2020: p90 task 212 min, long tasks "
