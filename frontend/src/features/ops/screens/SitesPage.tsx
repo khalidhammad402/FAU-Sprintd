@@ -52,7 +52,7 @@ export default function SitesPage() {
                   </span>
                   <span className="flex items-center gap-2">
                     <ProgressBar value={pct} tone="tank" label={`${s.name} tank level`} key={`${s.id}-${Math.round(pct)}`} />
-                    <span className="w-20 text-right text-xs text-ink-2 tnum">tank {num(pct, 0)} %</span>
+                    <span className="w-24 shrink-0 whitespace-nowrap text-right text-xs text-ink-2 tnum">tank {num(pct, 0)} %</span>
                   </span>
                 </button>
               );

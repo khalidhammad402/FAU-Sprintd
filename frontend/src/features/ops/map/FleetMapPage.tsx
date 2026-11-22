@@ -3,10 +3,10 @@
  * map controls, the chain line, and a "View as list" table alternative.
  */
 import { useMemo, useRef, useState } from "react";
-import { ArrowRight, Box, CheckCircle2, Compass, Droplet, Flame, List, LocateFixed, Map as MapIcon, Minus, Plus, Server, Shuffle, Sparkles, WifiOff, Wind, AlertOctagon } from "lucide-react";
+import { Box, CheckCircle2, Compass, Droplet, Flame, List, LocateFixed, Map as MapIcon, Minus, Plus, Server, Shuffle, WifiOff, Wind, AlertOctagon } from "lucide-react";
 import { useTheme } from "@/app/theme";
 import { useMotion } from "@/lib/motion";
-import { terms, hostType } from "@/lib/terms";
+import { hostType } from "@/lib/terms";
 import { num } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useLive } from "@/live/store";
@@ -46,7 +46,6 @@ export default function FleetMapPage() {
   const { reduced } = useMotion();
   const mapRef = useRef<FleetMapHandle>(null);
   const [is3d, setIs3d] = useState(true);
-  const [center, setCenter] = useState({ lat: 47.5596, lon: 7.5886 });
   const [intro] = useState(() => !reduced && !sessionStorage.getItem("dh.intro"));
   const [introRunning, setIntroRunning] = useState(intro);
   const siteIds = useMemo(() => sites.map((s) => s.id), [sites]);
@@ -111,24 +110,19 @@ export default function FleetMapPage() {
               intro={intro}
               onIntroDone={endIntro}
               padRight={drawerOpen ? 470 : 0}
-              onCenter={(c) => setCenter(c)}
             />
             <div className="pointer-events-none absolute left-5 top-4">
               <p className="text-xl font-light tracking-wide text-ink">Basel</p>
-              <p className="mt-0.5 font-mono text-2xs text-ink-3 tnum">
-                {num(center.lat, 4)}° N&nbsp;&nbsp;{num(center.lon, 4)}° E
-              </p>
             </div>
-            <div role="group" aria-label="Map controls" className="absolute bottom-16 left-5 flex flex-col gap-0.5 rounded-card border border-line bg-surface p-1 shadow-card">
+            <div role="group" aria-label="Map controls" className="absolute bottom-6 left-5 z-[6000] flex flex-col gap-0.5 rounded-card border border-line bg-surface p-1 shadow-card">
               <IconButton icon={Box} label={is3d ? "Flat view" : "3D view"} aria-pressed={is3d} onClick={() => setIs3d(mapRef.current?.toggle3d() ?? true)} />
               <IconButton icon={Plus} label="Zoom in" onClick={() => mapRef.current?.zoomIn()} />
               <IconButton icon={Minus} label="Zoom out" onClick={() => mapRef.current?.zoomOut()} />
               <IconButton icon={Compass} label="Reset north" onClick={() => mapRef.current?.resetNorth()} />
               <IconButton icon={LocateFixed} label="Show the whole fleet" onClick={() => mapRef.current?.locate()} />
             </div>
-            <ChainBar hidden={drawerOpen} />
             {introRunning && (
-              <button type="button" onClick={endIntro} className="absolute bottom-16 right-5 rounded-ctl border border-line-strong bg-surface px-3 py-1.5 text-xs font-medium shadow-card hover:bg-surface-2">
+              <button type="button" onClick={endIntro} className="absolute bottom-6 right-5 z-[6000] rounded-ctl border border-line-strong bg-surface px-3 py-1.5 text-xs font-medium shadow-card hover:bg-surface-2">
                 Skip intro
               </button>
             )}
@@ -139,20 +133,6 @@ export default function FleetMapPage() {
   );
 }
 
-function ChainBar({ hidden }: { hidden: boolean }) {
-  if (hidden) return null;
-  return (
-    <div aria-label="How DigitalHeat works" className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-line bg-surface/95 px-4 py-2 text-xs text-ink-2 shadow-card max-lg:hidden">
-      <Sparkles aria-hidden className="h-3.5 w-3.5 text-ok-ink" />
-      {terms.chain.map((c, i) => (
-        <span key={c} className="inline-flex items-center gap-3">
-          <span className="font-medium text-ink first-letter:uppercase">{c}</span>
-          {i < terms.chain.length - 1 && <ArrowRight aria-hidden className="h-3 w-3 text-ink-3" />}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 function SiteTable({ sites, selected, onSelect, liveIds }: { sites: Site[]; selected: string | null; onSelect: (id: string) => void; liveIds: string[] }) {
   const cols: Column<Site>[] = [

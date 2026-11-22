@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AlertOctagon, AlertTriangle, CheckCircle2, CircleDollarSign, Clock3, Flame, ListChecks, Play, Plus } from "lucide-react";
+import { AlertOctagon, AlertTriangle, CheckCircle2, CircleDollarSign, Clock3, ListChecks, Play, Plus } from "lucide-react";
 import { useAuth } from "@/app/auth-store";
 import { useCustomerOverview, useImpact } from "@/api/queries";
 import type { CustomerOverview, Job } from "@/api/types";
@@ -152,18 +152,6 @@ export default function Overview() {
         {(o) => <Tiles o={o} running={live.length} queuedArrived={my.timeKnown ? my.jobs.filter((j) => j.status === "queued").length : null} notYetArrived={my.notYetArrived} />}
       </QueryState>
 
-      <Card className="flex items-start gap-4 border-heat/25 bg-heat/5 p-5">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-ctl bg-heat/15 text-heat-ink">
-          <Flame aria-hidden className="h-5 w-5" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold">Your compute does two jobs at once.</p>
-          <p className="mt-0.5 text-sm text-ink-2">The electricity your workloads use comes back as hot water for host businesses in Basel. Flexible jobs run where heat is needed, which is why they cost least.</p>
-        </div>
-        <Link to="/compute/impact" className="shrink-0 max-sm:hidden">
-          <Button size="sm">See your impact</Button>
-        </Link>
-      </Card>
 
       <div className="grid grid-cols-[minmax(0,1fr)_380px] gap-6 max-xl:grid-cols-1">
         <section aria-labelledby="your-jobs" className="flex flex-col gap-3">

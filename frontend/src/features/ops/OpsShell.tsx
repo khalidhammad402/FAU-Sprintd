@@ -190,13 +190,12 @@ export function OpsShell({ children, fullBleed }: { children: ReactNode; fullBle
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-col">
-        <header className="flex h-16 shrink-0 items-center gap-4 border-b border-line px-6 max-md:px-3">
+        <header className="flex h-16 shrink-0 items-center gap-3 border-b border-line px-6 max-lg:px-4 max-md:px-3">
           <span className="text-xs font-semibold tracking-[0.12em] text-ink-2 max-xl:hidden">OPERATIONS CONSOLE</span>
           <span className="flex-1" />
           <ClockControl />
           <span className="flex-1" />
           <MockPill />
-          <span className="hidden rounded-md border border-dashed border-line-strong px-2 py-0.5 text-2xs text-ink-3 max-lg:inline">Read-only on tablet</span>
           <ThemeSwitch />
           <AlertTray onView={viewAlert} />
           <Pop

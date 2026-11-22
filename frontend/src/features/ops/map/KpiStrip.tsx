@@ -66,9 +66,9 @@ export function KpiStrip({ siteIds }: { siteIds: string[] }) {
     },
   ];
   return (
-    <section aria-label="Live fleet figures" className={(stale ? "stale " : "") + "grid grid-cols-5 gap-3 max-2xl:grid-cols-5 max-xl:grid-cols-3 max-lg:grid-cols-2"}>
+    <section aria-label="Live fleet figures" className={(stale ? "stale " : "") + "grid grid-cols-5 gap-3 max-xl:flex max-xl:overflow-x-auto max-xl:pb-1 max-xl:scrollbar-thin"}>
       {cards.map((c, i) => (
-        <Card key={c.label} className="animate-rise px-4 py-3" style={{ animationDelay: `${i * 40}ms` }}>
+        <Card key={c.label} className="animate-rise px-4 py-3 max-xl:min-w-[210px] max-xl:shrink-0" style={{ animationDelay: `${i * 40}ms` }}>
           <KpiTile label={c.label} icon={c.icon} tone={c.tone} value={c.value} unit={c.unit} decimals={c.decimals} period={("period" in c && c.period) || "today"} trend={c.trend} spark={c.spark} loading={loading} />
         </Card>
       ))}

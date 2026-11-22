@@ -100,7 +100,7 @@ export function ConnectionBanner() {
 export function MockPill() {
   if (!isMock) return null;
   return (
-    <span title="Mock data: recorded backend responses and WebSocket messages, no backend connected" className="inline-flex h-6 items-center rounded-full border border-dashed border-dump/60 px-2.5 text-2xs font-semibold text-dump-ink">
+    <span title="Mock data: recorded backend responses and WebSocket messages, no backend connected" className="inline-flex h-6 shrink-0 items-center whitespace-nowrap rounded-full border border-dashed border-dump/60 px-2.5 text-2xs font-semibold text-dump-ink">
       Mock data
     </span>
   );

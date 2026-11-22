@@ -28,7 +28,7 @@ export function ClockControl({ readOnly }: { readOnly?: boolean }) {
   const text = time.clock(now);
   const live = mode === "Live";
   return (
-    <div title="Simulated time: the scheduler clock, not your wall clock" className="inline-flex h-10 items-center gap-2.5 rounded-full border border-line bg-surface pl-1.5 pr-4">
+    <div title="Simulated time: the scheduler clock, not your wall clock" className="inline-flex h-10 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full border border-line bg-surface pl-1.5 pr-4">
       <button
         type="button"
         disabled={readOnly || !clock || update.isPending}
@@ -39,8 +39,8 @@ export function ClockControl({ readOnly }: { readOnly?: boolean }) {
         {clock?.paused ? <Play aria-hidden className="h-3 w-3 fill-current" /> : <Pause aria-hidden className="h-3 w-3 fill-current" />}
         {live && !reduced && <span key={beat} aria-hidden className="absolute inset-0 rounded-full border border-ok" style={{ animation: "ping1 900ms cubic-bezier(0.23,1,0.32,1) 1 both" }} />}
       </button>
-      <span className={cn("text-xs font-semibold", live ? "text-ok-ink" : mode === "Jumping" ? "text-dump-ink" : "text-ink-3")}>{mode}</span>
-      <span aria-hidden className="h-4 w-px bg-line-strong" />
+      <span className={cn("text-xs font-semibold max-md:hidden", live ? "text-ok-ink" : mode === "Jumping" ? "text-dump-ink" : "text-ink-3")}>{mode}</span>
+      <span aria-hidden className="h-4 w-px bg-line-strong max-md:hidden" />
       <span className="text-sm font-medium tnum" aria-label={`Simulated time ${text}`}>
         {[...text].map((ch, i) => (
           <span key={`${i}${ch}`} className={reduced ? "" : "inline-block animate-rise"} style={{ whiteSpace: "pre" }}>

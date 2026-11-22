@@ -112,11 +112,13 @@ export function PortalShell({ product, nav, title, actions, tabs, footer, childr
           <span className="hidden md:inline-flex">
             <MockPill />
           </span>
-          <span title="Simulated time: the scheduler clock of the demo, not your wall clock" className="inline-flex h-8 items-center gap-2 rounded-full border border-line bg-surface px-3 text-xs text-ink-2">
+          {now && (
+            <span title="Simulated time: the scheduler clock of the demo, not your wall clock" className="inline-flex h-8 items-center gap-2 rounded-full border border-line bg-surface px-3 text-xs text-ink-2">
             <Clock3 aria-hidden className="h-3.5 w-3.5" />
             {terms.simulatedTime}
-            <b className="font-medium text-ink tnum">{now ? time.clock(now) : "waiting for the scheduler"}</b>
+            <b className="font-medium text-ink tnum">{time.clock(now)}</b>
           </span>
+          )}
         </header>
         <AnimatePresence mode="wait" initial={false}>
           <motion.main
