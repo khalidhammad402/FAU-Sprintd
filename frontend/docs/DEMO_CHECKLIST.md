@@ -12,8 +12,8 @@ Run this end to end before going on stage. Commands are for Windows (Git Bash or
 
 - [ ] Backend, fresh run (the first weeks of the year load fastest): `DH_MQTT=0 .venv/Scripts/python -m uvicorn api.server:app --host 0.0.0.0 --port 8000`
   (PowerShell: `$env:DH_MQTT="0"; .venv\Scripts\python -m uvicorn api.server:app --host 0.0.0.0 --port 8000`)
-- [ ] Frontend: `cd frontend`, `pnpm dev` (live) or `pnpm dev:mock` (no backend needed). Open `http://localhost:5173`.
-- [ ] Other laptops on the hotspot: open `http://<host-ip>:5173`, press **Shift + D**, set the API address to `http://<host-ip>:8000/api/v1`, Apply.
+- [ ] Frontend: `cd frontend`, `pnpm lan` (live, served to the local network) or `pnpm dev:mock` (no backend, this laptop only). Open `http://localhost:5173`.
+- [ ] Other laptops and phones on the same network: open `http://<this-laptop-ip>:5173` (find the IP with `ipconfig`). No settings needed: the frontend forwards `/api` to the backend. University Wi-Fi (eduroam) usually blocks device-to-device traffic: use a phone hotspot.
 - [ ] Shift + D shows connection diagnostics: REST latency, WebSocket state, last message age.
 
 ## 2. Three windows, one per role
