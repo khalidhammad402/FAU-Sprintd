@@ -1,6 +1,6 @@
 site_id,name,type,lat,lon,building_height_m,tank_kwh,owner
-H1,Household H1,household,47.555,7.575,9,35.0,h1owner
-H2,Household H2,household,47.561,7.587,9,35.0,h2owner
-FARM1,Farm FARM1,farm,47.567,7.599,18,35.0,farm1owner
-HOTEL1,Hotel HOTEL1,hotel,47.555,7.611,18,35.0,hotel1owner
-HOTEL2,Hotel HOTEL2,hotel,47.561,7.623,18,35.0,hotel2owner
+H1,Hallenbad Gundeli,pool,47.54385,7.59665,12,35.0,h1owner
+H2,Wohnblock Matthäus,block,47.56795,7.59395,24,35.0,h2owner
+FARM1,Hof Schönbühl,farm,47.59545,7.65215,9,35.0,farm1owner
+HOTEL1,Hotel Rheinufer,hotel,47.55745,7.58625,21,35.0,hotel1owner
+HOTEL2,Messehotel Rosental,hotel,47.56425,7.60255,30,35.0,hotel2owner

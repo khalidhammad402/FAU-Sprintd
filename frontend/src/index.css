@@ -1,0 +1,158 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens (design/design-tokens.json). Values are RGB channels so Tailwind can add alpha.
+   Data colours keep one meaning each: heat = server heat and running compute, tank = stored heat,
+   ok = covered and complete, idle = neutral, dump = dumped heat and caution,
+   critical = backup heat, unmet demand, failure. `-ink` is the text/icon variant for the theme. */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --heat: 255 122 26;
+  --tank: 59 130 246;
+  --ok: 52 211 153;
+  --idle: 148 163 184;
+  --dump: 251 191 36;
+  --critical: 240 82 82;
+  --heat-ink: 168 67 0;
+  --tank-ink: 29 78 216;
+  --ok-ink: 4 120 87;
+  --idle-ink: 71 85 105;
+  --dump-ink: 146 64 14;
+  --critical-ink: 185 28 28;
+  --bg: 244 246 249;
+  --surface: 255 255 255;
+  --surface-2: 241 244 248;
+  --surface-3: 230 235 241;
+  --line: 226 231 238;
+  --line-strong: 201 210 222;
+  --ink: 15 23 42;
+  --ink-2: 71 85 105;
+  --ink-3: 91 106 128;
+  --accent: 29 78 216;
+  --accent-fg: 255 255 255;
+  --rail: 255 255 255;
+  --shadow: 15 23 42;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --heat-ink: 255 148 71;
+  --tank-ink: 127 178 255;
+  --ok-ink: 52 211 153;
+  --idle-ink: 163 177 198;
+  --dump-ink: 251 191 36;
+  --critical-ink: 255 128 128;
+  --bg: 7 17 31;
+  --surface: 12 24 40;
+  --surface-2: 18 32 51;
+  --surface-3: 26 42 64;
+  --line: 30 46 68;
+  --line-strong: 48 66 92;
+  --ink: 232 238 248;
+  --ink-2: 169 182 201;
+  --ink-3: 132 148 172;
+  --accent: 37 99 235;
+  --accent-fg: 255 255 255;
+  --rail: 9 20 35;
+  --shadow: 1 6 16;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-bg text-ink font-sans text-base antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--tank));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: rgb(var(--tank) / 0.3);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  button {
+    touch-action: manipulation;
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line-strong)) transparent;
+  }
+  .stale {
+    opacity: 0.55;
+    filter: saturate(0.6);
+    transition:
+      opacity 300ms,
+      filter 300ms;
+  }
+  .skeleton {
+    background: linear-gradient(100deg, rgb(var(--surface-2)) 30%, rgb(var(--surface-3)) 50%, rgb(var(--surface-2)) 70%);
+    background-size: 300% 100%;
+    @apply animate-shimmer rounded-ctl;
+  }
+}
+
+/* MapLibre controls and attribution, restyled to the tokens */
+.maplibregl-ctrl-attrib {
+  background: rgb(var(--surface) / 0.8) !important;
+  color: rgb(var(--ink-3)) !important;
+  font-size: 10.5px !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: rgb(var(--ink-2)) !important;
+}
+.maplibregl-canvas:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* keyframes used from inline styles (Tailwind only emits keyframes for animate-* classes) */
+@keyframes travel {
+  from { left: 0%; }
+  to { left: 100%; }
+}
+@keyframes wave {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes ping1 {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.8); }
+}

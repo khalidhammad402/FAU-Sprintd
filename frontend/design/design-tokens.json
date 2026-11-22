@@ -1,0 +1,83 @@
+{
+  "$description": "DigitalHeat design tokens. Source of truth for assets/css/dh.css. Colour meanings are fixed: one meaning per token, never reused.",
+  "color": {
+    "semantic": {
+      "heat":     { "value": "#FF7A1A", "meaning": "Server heat, active compute, running tasks", "ink": { "dark": "#FF9447", "light": "#A84300" } },
+      "tank":     { "value": "#3B82F6", "meaning": "Thermal tank, stored heat, heat demand", "ink": { "dark": "#7FB2FF", "light": "#1D4ED8" } },
+      "ok":       { "value": "#34D399", "meaning": "Healthy, demand covered, completed", "ink": { "dark": "#34D399", "light": "#047857" } },
+      "idle":     { "value": "#94A3B8", "meaning": "Idle, infrastructure, neutral", "ink": { "dark": "#A3B1C6", "light": "#475569" } },
+      "dump":     { "value": "#FBBF24", "meaning": "Heat dumped, caution, deadline risk. Nothing else.", "ink": { "dark": "#FBBF24", "light": "#92400E" } },
+      "critical": { "value": "#F05252", "meaning": "Backup heat needed, unmet demand, failure, missed deadline. Never decoration.", "ink": { "dark": "#FF8080", "light": "#B91C1C" } }
+    },
+    "usage": {
+      "fill": "Use `value` for chart areas, bars, rings, map columns and status dots.",
+      "ink": "Use `ink` for text and icons on the matching theme. All ink values meet WCAG AA (4.5:1) on their surface and on a 14 % tint chip.",
+      "tint": "Chip and badge background = 14 % of `value` over the surface, border = 34 % of `value`."
+    },
+    "dark": {
+      "bg": "#07111F",
+      "panel": "rgba(15,27,46,0.62)",
+      "panelSolid": "#0F1B2E",
+      "panelBlur": "18px",
+      "panelBorder": "rgba(255,255,255,0.08)",
+      "surface2": "rgba(255,255,255,0.045)",
+      "surface3": "rgba(255,255,255,0.085)",
+      "line": "rgba(255,255,255,0.08)",
+      "lineStrong": "rgba(255,255,255,0.16)",
+      "text": "#E8EEF8",
+      "text2": "#A9B6C9",
+      "text3": "#8494AC",
+      "track": "rgba(255,255,255,0.09)",
+      "navyRail": "#0A1628"
+    },
+    "light": {
+      "bg": "#F6F7F9",
+      "surface": "#FFFFFF",
+      "surface2": "#F1F4F8",
+      "surface3": "#E6EBF1",
+      "line": "#E2E7EE",
+      "lineStrong": "#C9D2DE",
+      "text": "#0F172A",
+      "text2": "#475569",
+      "text3": "#5B6A80",
+      "track": "#E6EBF1"
+    },
+    "action": { "primary": "#2563EB", "primaryHover": "#1D4ED8", "primaryOnLight": "#1D4ED8", "focusRing": "#3B82F6" },
+    "categorical": {
+      "$description": "Neutral ramp for data without a semantic colour, for example priority tiers and revenue streams. Never use a semantic colour for these.",
+      "light": ["#0F172A", "#64748B", "#CBD5E1"],
+      "dark": ["#E8EEF8", "#8494AC", "#47566E"]
+    },
+    "contrast": {
+      "$description": "WCAG 2.1 ratios, computed from the values above (also shown live on system/index.html).",
+      "dark": { "text on panel": 14.81, "text2 on panel": 8.4, "text3 on panel": 5.6, "heat ink on panel": 7.87, "tank ink on panel": 7.99, "ok ink on panel": 8.98, "idle ink on panel": 7.94, "dump ink on panel": 10.34, "critical ink on panel": 7.11, "white on primary": 5.17 },
+      "light": { "ink on bg": 16.65, "text2 on bg": 7.07, "text3 on bg": 5.13, "heat ink on bg": 5.65, "tank ink on bg": 6.25, "ok ink on bg": 5.12, "idle ink on bg": 7.07, "dump ink on bg": 6.61, "critical ink on bg": 6.04, "white on primary": 6.7 },
+      "lowest": "4.68 (ok ink on a 14 % ok chip over --light-bg). Everything is AA. Body text on light is AAA."
+    }
+  },
+  "font": {
+    "ui": "Inter, system-ui, 'Segoe UI', Roboto, sans-serif",
+    "numeric": "'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace",
+    "numericFeatures": "tabular-nums",
+    "files": "assets/fonts (variable woff2, latin subset, SIL Open Font License)",
+    "scale": { "12": "labels, meta, units", "13": "controls, table cells", "14": "body", "16": "card title, lead", "20": "section title", "28": "KPI value, weight 300", "40": "KPI hero, weight 300" },
+    "rules": ["KPI numerals large and light, unit small and muted beside them", "Every number carries a unit and a period, for example 12.5 kWh, last 15 min"]
+  },
+  "space": { "grid": 8, "steps": [4, 8, 12, 16, 24, 32, 48], "panelFloat": 16 },
+  "radius": { "control": 10, "card": 16, "drawer": 22, "pill": 999 },
+  "size": { "control": 36, "controlSmall": 28, "touchTarget": 44, "rail": 240, "railCollapsed": 72, "drawer": 420, "topBar": 60 },
+  "shadow": {
+    "rule": "Soft, tinted by the accent colour of the content. Never plain grey on dark.",
+    "cardDark": "0 20px 48px -18px rgba(1,6,16,0.8)",
+    "cardLight": "0 1px 2px rgba(15,23,42,0.05), 0 14px 30px -20px rgba(15,23,42,0.25)",
+    "glow": "0 10px 36px -14px color-mix(in srgb, <tone> 55%, transparent)"
+  },
+  "motion": {
+    "duration": { "fade": 200, "drawer": 280, "status": 300, "number": 400, "ring": 400, "column": 500, "tank": 600, "camera": 700, "arc": 900, "heatPulse": 1600, "breathe": 2400 },
+    "easing": { "out": "cubic-bezier(0.16, 1, 0.3, 1)", "inOut": "cubic-bezier(0.65, 0, 0.35, 1)", "standard": "cubic-bezier(0.2, 0, 0, 1)" },
+    "stagger": { "drawerContent": 40, "introColumns": 60 },
+    "reducedMotion": "Every animation becomes an instant state change with a text equivalent. See motion-spec.md."
+  },
+  "breakpoint": { "phone": 360, "tablet": 768, "laptop": 1024, "desktop": 1440, "wide": 1920 },
+  "map": { "center": { "lat": 47.5607, "lon": 7.6065 }, "pitch": 55, "homeBearingRad": 0.78, "selectedPitch": 60, "statusColor": { "covered": "ok", "tank_low": "tank", "dumping": "dump", "unmet": "critical", "offline": "idle" } }
+}

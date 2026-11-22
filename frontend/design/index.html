@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DigitalHeat · Design prototype</title>
+  <link rel="stylesheet" href="assets/css/dh.css" />
+  <style>
+    body { min-height: 100vh; display: grid; place-items: center; padding: 32px 20px; background: var(--ops-bg); background-image: linear-gradient(rgba(148,163,184,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.04) 1px, transparent 1px); background-size: 32px 32px; }
+    main { width: min(1040px, 100%); }
+    h1 { font-size: 40px; font-weight: 300; letter-spacing: -0.03em; line-height: 1.1; margin: 28px 0 12px; }
+    .lead { color: var(--text-2); font-size: 16px; max-width: 64ch; }
+    .lead b { color: var(--text); font-weight: 600; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+    .go { display: flex; flex-direction: column; gap: 10px; padding: 22px; text-decoration: none; color: var(--text); transition: transform 200ms var(--ease-out), border-color 200ms; }
+    .go:hover { transform: translateY(-3px); border-color: rgba(255,255,255,.22); }
+    .go h2 { font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+    .go p { color: var(--text-2); font-size: 13px; flex: 1; }
+    .go code { font: 500 12px var(--font-num); color: var(--text-3); }
+    .tag { align-self: flex-start; font: 600 10.5px var(--font-num); letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--text-2); }
+    .docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 16px; }
+    .logo span span { color: var(--heat-ink); }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="9" fill="#0F1B2E" stroke="rgba(255,255,255,.14)" /><path d="M9 10.5h9.5M9 16h6M9 21.5h3.5" stroke="#FF7A1A" stroke-width="2.6" stroke-linecap="round" /><path d="M22 13.2s3.6 3.6 3.6 6.4a3.6 3.6 0 0 1-7.2 0c0-2.8 3.6-6.4 3.6-6.4z" fill="#3B82F6" /></svg>
+      <span>Digital<span>Heat</span></span><span class="dh-illustrative" style="margin-left:8px">Design prototype · illustrative data</span>
+    </div>
+    <h1>Compute. Heat. Sustain.</h1>
+    <p class="lead"><b>MNC sends AI workloads, DigitalHeat schedules compute, servers create heat, host business uses heat.</b> Three connected experiences on one design system. Everything runs offline from this folder on a simulated scheduler clock.</p>
+    <div class="grid">
+      <a class="go dh-glass" href="ops/index.html"><span class="tag">Operator · dark</span><h2>Operations Console <span aria-hidden="true">→</span></h2><p>Fleet map of Basel, live KPI rail, site, server and task drawers, scheduler lab, events, customers, platform economics.</p><code>/ops</code></a>
+      <a class="go dh-glass" href="compute/index.html"><span class="tag">Compute buyer · light</span><h2>Compute Portal <span aria-hidden="true">→</span></h2><p>Submit jobs with a live cost and finish estimate, follow progress, usage and invoices, heat impact, API keys.</p><code>/compute</code></a>
+      <a class="go dh-glass" href="host/index.html"><span class="tag">Host business · phone first</span><h2>Host Portal <span aria-hidden="true">→</span></h2><p>Tank level, heat recovered today, servers working, energy by period, recovered heat value, plain-language alerts.</p><code>/host</code></a>
+    </div>
+    <div class="docs">
+      <a class="dh-btn" href="system/index.html">Design system sheet</a>
+      <a class="dh-btn dh-btn--ghost" href="README.md">README.md</a>
+      <a class="dh-btn dh-btn--ghost" href="components.md">components.md</a>
+      <a class="dh-btn dh-btn--ghost" href="motion-spec.md">motion-spec.md</a>
+      <a class="dh-btn dh-btn--ghost" href="design-tokens.json">design-tokens.json</a>
+      <a class="dh-btn dh-btn--ghost" href="ops/index.html?intro=1">Replay the Operations intro</a>
+    </div>
+  </main>
+</body>
+</html>

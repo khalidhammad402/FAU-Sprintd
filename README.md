@@ -6,6 +6,17 @@ met, little heat is dumped and every job finishes before its deadline.
 
 The same code produces the offline results (simulation) and controls real processes on laptops (live).
 
+## Walkthrough video
+
+A 9-minute tour of the web frontend with voiceover: the Operations Console (3D fleet map of Basel, site, server
+and task drawers, scheduler lab, events, platform economics, settings), the Compute Portal and the Host Portal.
+Click the image to open the video.
+
+[![DigitalHeat walkthrough: Operations Console, Compute Portal and Host Portal](docs/media/walkthrough-thumbnail.jpg)](docs/media/DigitalHeat_walkthrough.mp4)
+
+Recorded in the frontend's mock mode (recorded backend data, simulated time). The frontend and how to run it:
+[`frontend/README.md`](frontend/README.md).
+
 ## Quick start
 
 ```
