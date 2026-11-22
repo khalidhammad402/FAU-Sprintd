@@ -70,23 +70,36 @@ export function reconcile(m: WsMessage, { qc }: Ctx) {
   }
 }
 
-/** Lists the socket does not fully describe: refetch once per slot, only if a screen shows them. */
+/**
+ * Lists the socket does not fully describe are refetched after a slot, only if a screen shows them, and
+ * throttled per endpoint: some backend calls take seconds late in the simulated year and hold the engine
+ * lock (FRONTEND_GAPS.md), so a fast clock must not turn into a request storm. A running request is never
+ * cancelled for a newer one (the backend would still finish the old one).
+ */
+const REFRESH: [string[], number][] = [
+  [["admin", "kpis"], 8_000],
+  [["admin", "tasks"], 8_000],
+  [["admin", "events"], 8_000],
+  [["admin", "siteServers"], 8_000],
+  [["customer", "job"], 10_000],
+  [["customer", "jobTasks"], 10_000],
+  [["host", "servers"], 20_000],
+  [["admin", "customers"], 30_000],
+  [["admin", "jobs"], 45_000],
+  [["customer", "jobs"], 45_000],
+  [["customer", "overview"], 60_000],
+  [["host", "overview"], 90_000],
+];
+const lastRefresh = new Map<string, number>();
 function refreshPerSlot(qc: QueryClient) {
-  const keys = [
-    ["admin", "kpis"],
-    ["admin", "tasks"],
-    ["admin", "jobs"],
-    ["admin", "events"],
-    ["admin", "customers"],
-    ["admin", "siteServers"],
-    ["customer", "overview"],
-    ["customer", "jobs"],
-    ["customer", "job"],
-    ["customer", "jobTasks"],
-    ["host", "overview"],
-    ["host", "servers"],
-  ];
-  keys.forEach((queryKey) => void qc.invalidateQueries({ queryKey, refetchType: "active" }));
+  const now = Date.now();
+  for (const [queryKey, every] of REFRESH) {
+    const k = queryKey.join("/");
+    if (now - (lastRefresh.get(k) ?? 0) < every) continue;
+    if (qc.isFetching({ queryKey }) > 0) continue;
+    lastRefresh.set(k, now);
+    void qc.invalidateQueries({ queryKey, refetchType: "active" }, { cancelRefetch: false });
+  }
 }
 
 function patchSiteList(qc: QueryClient, r: SiteLive) {

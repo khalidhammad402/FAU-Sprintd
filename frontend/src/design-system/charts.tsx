@@ -134,7 +134,7 @@ export function HeatFlowChart({ rows, height = 190, title, empty = "No heat dema
       table={<SimpleTable unit="kWh" rows={data} cols={[{ key: "t", label: "Time" }, ...HF.map((s) => ({ key: s.key, label: s.label }))]} />}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -18 }}>
+        <ComposedChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -4 }}>
           <CartesianGrid vertical={false} stroke="rgb(var(--line))" />
           <XAxis dataKey="t" tick={axis} tickLine={false} axisLine={false} minTickGap={36} />
           <YAxis tick={axis} tickLine={false} axisLine={false} width={44} tickFormatter={(v) => num(v, v === 0 ? 0 : v < 1 ? 2 : v < 10 ? 1 : 0)} />

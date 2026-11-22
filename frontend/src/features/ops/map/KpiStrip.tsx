@@ -8,6 +8,7 @@ export function KpiStrip({ siteIds }: { siteIds: string[] }) {
   const { today, prior, runTotal } = useTodayKpis();
   const hourly = useFleetHourly(siteIds);
   const slotKpis = useLive((s) => s.slotKpis);
+  const stale = useLive((s) => s.conn.state === "reconnecting");
   const k = today.data,
     p = prior.data;
   const loading = today.isPending;
@@ -65,7 +66,7 @@ export function KpiStrip({ siteIds }: { siteIds: string[] }) {
     },
   ];
   return (
-    <section aria-label="Live fleet figures" className="grid grid-cols-5 gap-3 max-2xl:grid-cols-5 max-xl:grid-cols-3 max-lg:grid-cols-2">
+    <section aria-label="Live fleet figures" className={(stale ? "stale " : "") + "grid grid-cols-5 gap-3 max-2xl:grid-cols-5 max-xl:grid-cols-3 max-lg:grid-cols-2"}>
       {cards.map((c, i) => (
         <Card key={c.label} className="animate-rise px-4 py-3" style={{ animationDelay: `${i * 40}ms` }}>
           <KpiTile label={c.label} icon={c.icon} tone={c.tone} value={c.value} unit={c.unit} decimals={c.decimals} period={("period" in c && c.period) || "today"} trend={c.trend} spark={c.spark} loading={loading} />

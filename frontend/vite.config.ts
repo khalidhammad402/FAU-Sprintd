@@ -10,7 +10,7 @@ export default defineConfig({
   preview: { port: 4173, host: true },
   build: {
     target: "es2022",
-    chunkSizeWarningLimit: 1600,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
         manualChunks: {

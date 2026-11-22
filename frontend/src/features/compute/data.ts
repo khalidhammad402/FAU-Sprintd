@@ -26,14 +26,15 @@ const rank: Record<string, number> = { running: 0, queued: 1, missed: 2, done: 3
  * The list endpoint pages oldest first and the year holds ~23,000 jobs, so the newest finished jobs come from
  * the last page (cursor = offset).
  */
-export function useMyJobs() {
+/**  also loads missed and recently finished jobs (slow on the backend: only on My Jobs). */
+export function useMyJobs({ history = false }: { history?: boolean } = {}) {
   const now = useNow();
   const running = useCustomerJobs({ status: "running", limit: 200 });
-  const queued = useCustomerJobs({ status: "queued", limit: 200 });
-  const missed = useCustomerJobs({ status: "missed", limit: 200 });
-  const doneHead = useCustomerJobs({ status: "done", limit: 1 });
+  const queued = useCustomerJobs({ status: "queued", limit: 200 }, { enabled: history });
+  const missed = useCustomerJobs({ status: "missed", limit: 200 }, { enabled: history });
+  const doneHead = useCustomerJobs({ status: "done", limit: 1 }, { enabled: history });
   const doneTotal = doneHead.data?.total ?? 0;
-  const doneTail = useCustomerJobs(doneHead.data ? { status: "done", limit: 30, cursor: String(Math.max(0, doneTotal - 30)) } : { status: "done", limit: 1 });
+  const doneTail = useCustomerJobs(doneHead.data ? { status: "done", limit: 30, cursor: String(Math.max(0, doneTotal - 30)) } : { status: "done", limit: 1 }, { enabled: history && !!doneHead.data });
   const live = useLiveOwnJobs();
   const jobs = useMemo(() => {
     const map = new Map<string, Job>();
@@ -53,8 +54,8 @@ export function useMyJobs() {
     notYetArrived,
     /** false until the first push tells us the simulated time */
     timeKnown: !!now,
-    isPending: running.isPending && queued.isPending,
-    isError: running.isError && queued.isError,
+    isPending: running.isPending,
+    isError: running.isError,
     error: running.error ?? queued.error,
     refetch: () => {
       void running.refetch();

@@ -151,6 +151,8 @@ export const FleetMap = forwardRef<FleetMapHandle, Props>(function FleetMap({ si
       onIntroDone?.();
     }
     render(now);
+    // exposed for tests and the presenter: how many migration arcs are on the map
+    if (box.current?.parentElement) box.current.parentElement.dataset.arcs = String(a.arcs.length);
     const breathing = latest.current.sites.some((s) => s.status === "unmet" || s.status === "dumping") && !latest.current.reduced;
     const busy = a.introStart || a.pulses.length || a.ripples.length || a.arcs.some((x) => now - x.start < 900) || breathing || a.arcs.length;
     a.raf = busy && !document.hidden ? requestAnimationFrame(loop) : 0;

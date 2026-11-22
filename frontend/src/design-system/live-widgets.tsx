@@ -23,7 +23,8 @@ export function ClockControl({ readOnly }: { readOnly?: boolean }) {
   const [beat, setBeat] = useState(0);
   const slot = clock?.slot;
   useEffect(() => setBeat((b) => b + 1), [slot]);
-  const mode = clock?.mode === "jumping" ? "Jumping" : clock?.paused ? "Paused" : clock ? "Live" : "Connecting";
+  const down = useLive((s) => s.conn.state === "reconnecting" || s.conn.state === "closed");
+  const mode = down ? "Offline" : clock?.mode === "jumping" ? "Jumping" : clock?.paused ? "Paused" : clock ? "Live" : "Connecting";
   const text = time.clock(now);
   const live = mode === "Live";
   return (

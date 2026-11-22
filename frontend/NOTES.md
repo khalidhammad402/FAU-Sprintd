@@ -29,6 +29,11 @@ What I learned before building, and the assumptions I made. Read with `docs/FRON
 - Drawer and filter state lives in the URL.
 - Fonts bundled (Fontsource Inter + JetBrains Mono): no network fonts on the hotspot.
 
+## Learned in live testing
+- Late in the simulated year several endpoints take 3 to 14 s and hold the engine lock, which stalls the clock (FRONTEND_GAPS.md #10). The per-slot refetch is therefore throttled per endpoint and never cancels a running request; heavy job lists load only where they are shown.
+- `/admin/kpis` with `from`/`to` still returns the whole run's compute income and job outcomes, so those figures say "since run start".
+- Skills applied from skills.sh as guidance (not installed): Anthropic `frontend-design` (one bold moment: the map; no gradients, glows, generic eyebrows), Vercel `web-design-guidelines` (labels, focus, reduced motion, URL state), Vercel `react-best-practices` (lazy chunks per experience, no derived state in effects), `emil-design-eng` (ease-out curves, drawer timing, no animation on keyboard actions).
+
 ## Assumptions
 - Alert severity: `unmet_demand` and `server_offline` are shown as critical (backend sends warning); `heat_dumped` info alerts are listed but do not raise the bell badge.
 - Mock replay slot length defaults to 5 s; live mode uses the backend's `slotSeconds`.

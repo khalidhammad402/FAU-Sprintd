@@ -111,9 +111,9 @@ export function usePricingMutation() {
 }
 
 /* ---------- customer ---------- */
-export const useCustomerOverview = () => useQuery({ queryKey: qk.customer.overview, queryFn: customerApi.overview });
-export const useCustomerJobs = (q: Parameters<typeof customerApi.jobs>[0] = {}) =>
-  useQuery({ queryKey: qk.customer.jobs(q), queryFn: () => customerApi.jobs(q), placeholderData: keepPreviousData });
+export const useCustomerOverview = () => useQuery({ queryKey: qk.customer.overview, queryFn: customerApi.overview, staleTime: 60_000 });
+export const useCustomerJobs = (q: Parameters<typeof customerApi.jobs>[0] = {}, opts: { enabled?: boolean } = {}) =>
+  useQuery({ queryKey: qk.customer.jobs(q), queryFn: () => customerApi.jobs(q), placeholderData: keepPreviousData, enabled: opts.enabled ?? true, staleTime: 45_000 });
 export const useCustomerJob = (id?: string) => useQuery({ queryKey: qk.customer.job(id!), queryFn: () => customerApi.job(id!), enabled: on(id) });
 export const useCustomerJobTasks = (id?: string) => useQuery({ queryKey: qk.customer.jobTasks(id!), queryFn: () => customerApi.jobTasks(id!), enabled: on(id) });
 export const useUsage = () => useQuery({ queryKey: qk.customer.usage, queryFn: customerApi.usage });
@@ -133,7 +133,7 @@ export function useCustomerMutations() {
 
 /* ---------- host ---------- */
 export const useHostSites = () => useQuery({ queryKey: qk.host.sites, queryFn: hostApi.sites, staleTime: Infinity });
-export const useHostOverview = (id?: string) => useQuery({ queryKey: qk.host.overview(id!), queryFn: () => hostApi.overview(id!), enabled: on(id) });
+export const useHostOverview = (id?: string) => useQuery({ queryKey: qk.host.overview(id!), queryFn: () => hostApi.overview(id!), enabled: on(id), staleTime: 90_000 });
 export const useHostEnergy = (id: string | undefined, period: "day" | "week" | "month" | "year") =>
   useQuery({ queryKey: qk.host.energy(id!, period), queryFn: () => hostApi.energy(id!, period), enabled: on(id), placeholderData: keepPreviousData });
 export const useHostSavings = (id?: string) => useQuery({ queryKey: qk.host.savings(id!), queryFn: () => hostApi.savings(id!), enabled: on(id) });

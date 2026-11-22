@@ -16,7 +16,7 @@ import { TierChip } from "./ui";
 export default function MyJobs() {
   const [params, setParams] = useSearchParams();
   const selected = params.get("job");
-  const my = useMyJobs();
+  const my = useMyJobs({ history: true });
   const overview = useCustomerOverview();
   const now = useNow();
   const [status, setStatus] = useState<string | null>(null);

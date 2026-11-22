@@ -42,6 +42,7 @@ export default function FleetMapPage() {
   const migrations = useLive((s) => s.migrations);
   const slot = useLive((s) => s.clock?.slot ?? null);
   const liveServers = useLive((s) => s.servers);
+  const stale = useLive((s) => s.conn.state === "reconnecting");
   const { reduced } = useMotion();
   const mapRef = useRef<FleetMapHandle>(null);
   const [is3d, setIs3d] = useState(true);
@@ -81,7 +82,7 @@ export default function FleetMapPage() {
         </div>
       </div>
 
-      <div className="relative mt-3 min-h-[360px] flex-1 border-t border-line">
+      <div className={cn("relative mt-3 min-h-[360px] flex-1 border-t border-line", stale && "stale")}>
         {isError && !sites.length ? (
           <ErrorState error={error} title="The fleet could not be loaded" onRetry={refetch} />
         ) : isPending ? (
