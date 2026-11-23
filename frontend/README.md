@@ -20,7 +20,15 @@ Walkthrough video (9 min, voiceover): [`docs/media/DigitalHeat_walkthrough.mp4`]
 pnpm install
 pnpm dev          # live: needs the backend on http://localhost:8000
 pnpm dev:mock     # mock: no backend, recorded responses and a replayed simulated day
+pnpm lan          # production build served to the local network on port 5173 (live)
 ```
+
+On the local network, other devices open `http://<this-laptop-ip>:5173`. The frontend server forwards `/api` and the
+WebSocket to the backend on this laptop (`DH_BACKEND`, default `http://127.0.0.1:8000`), so nothing has to be configured
+on the other devices. Mock mode works only on this laptop (the mock service worker needs `localhost` or HTTPS).
+
+`pnpm portal` starts the portal on port 8080 (`../portal/`): one page with the pitch deck, this dashboard and the walkthrough
+video, plus a QR code of its network address. The last slide of the deck shows the same code.
 
 Backend (from the repo root): `DH_MQTT=0 .venv/Scripts/python -m uvicorn api.server:app --port 8000`, with `websockets` installed (see `docs/FRONTEND_GAPS.md` #3).
 

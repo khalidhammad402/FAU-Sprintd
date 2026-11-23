@@ -18,7 +18,8 @@ export function setRuntimeOverride(next: Override | null) {
 }
 
 const o = readOverride();
-const apiBase = (o.apiBase ?? import.meta.env.VITE_API_BASE ?? "http://localhost:8000/api/v1").replace(/\/$/, "");
+// default: the address the page came from; pnpm dev and pnpm lan forward /api to the backend
+const apiBase = (o.apiBase ?? import.meta.env.VITE_API_BASE ?? `${location.origin}/api/v1`).replace(/\/$/, "");
 
 export const env = {
   apiBase,
